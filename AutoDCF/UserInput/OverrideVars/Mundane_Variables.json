@@ -1,0 +1,22 @@
+{
+  "income_tax_expense" : "Auto",
+
+  "interest_expense" : "Auto",
+
+  "total_debt" : "Auto",
+
+  "total_equity" : "Auto",
+
+  "ebt" : "Auto",
+
+  "beta" : "Auto",
+
+  "tax_rate" : "Auto",
+
+  "yield_rate" : "Auto",
+
+  "industry" : "Auto",
+
+  "ev_ebidta_multiple_mode" : "basket"
+
+}

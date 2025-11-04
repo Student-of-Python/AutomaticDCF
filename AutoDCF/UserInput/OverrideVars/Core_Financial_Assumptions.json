@@ -1,0 +1,15 @@
+{
+  "WACC" : "Auto",
+
+  "Terminal_Growth_Rate" : 0.03,
+
+  "Exit_Multiple" : "Auto",
+
+  "Beta" : "Auto",
+
+  "ERP" : "Auto",
+
+  "Risk_Free_Rate" : "Auto",
+
+  "Shares_Outstanding" : "Auto"
+}

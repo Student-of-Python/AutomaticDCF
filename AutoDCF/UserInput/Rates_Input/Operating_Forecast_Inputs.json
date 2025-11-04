@@ -1,0 +1,58 @@
+{
+
+  "rate_map": {
+
+
+    "revenue": {
+      "mode": "Hybrid",
+      "manual_rates": [0.03, 0.06],
+      "auto_method": "ConvergingMovingAverage",
+      "parameters": {
+          "terminal_rate": "AUTO",
+          "window": 3}
+    },
+
+    "ebit": {
+      "mode": "Hybrid",
+      "manual_rates": [0.03, 0.06],
+      "auto_method": "MovingAverage",
+      "parameters": {
+          "window": 3}
+    },
+
+    "capex": {
+      "mode": "Hybrid",
+      "manual_rates": [0.03, 0.06],
+      "auto_method": "MovingAverage",
+      "parameters": {
+          "window": 3}
+
+    },
+
+    "nopat": {
+      "mode": "Hybrid",
+      "manual_rates": [0.03, 0.06],
+      "auto_method": "MovingAverage",
+      "parameters": {
+          "window": 3 }
+    },
+
+    "nwc": {
+      "mode": "Hybrid",
+      "manual_rates": [0.03, 0.06],
+      "auto_method": "MovingAverage",
+      "parameters": {
+          "window": 3 }
+    },
+
+    "da": {
+      "mode": "Hybrid",
+      "manual_rates": [0.03, 0.06],
+      "auto_method": "MovingAverage",
+      "parameters": {
+          "window": 3 }
+
+
+    }
+  }
+}

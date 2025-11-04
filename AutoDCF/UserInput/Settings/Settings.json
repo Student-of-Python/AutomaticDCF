@@ -1,0 +1,12 @@
+{
+  "Ticker" : "RYAAY",
+
+  "Forecasted_Period" : 4,
+
+  "Historical_Period" : 4,
+
+  "Method" : "exit_multiple",
+
+  "Export" : "True"
+
+}

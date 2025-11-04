@@ -1,0 +1,17 @@
+# IDE/editor folders
+.idea/
+.vscode/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Secrets
+AutoDCF/DataPipeline/.env
+.env
+
+# Archive folder
+AutoDCF/Archive/
+
+# Other
+*.iml
