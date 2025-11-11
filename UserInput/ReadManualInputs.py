@@ -1,4 +1,3 @@
-from AutoDCF.UserInput import *
 import json
 
 def read_manual_inputs():

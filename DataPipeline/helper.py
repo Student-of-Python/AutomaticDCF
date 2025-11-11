@@ -1,5 +1,5 @@
-from typing import Union, List, Optional, Iterable, Any
-from AutoDCF.DataPipeline.searchonline import getLinkContentTable
+from typing import Union, Iterable, Any
+from DataPipeline.searchonline import getLinkContentTable
 from difflib import SequenceMatcher
 import pandas as pd
 

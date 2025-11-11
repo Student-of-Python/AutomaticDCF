@@ -24,9 +24,9 @@ Key components and techniques implemented in the project include:
 ## Intended Usage  
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/Student-of-Python/FinanceProjects.git
-   cd FinanceProjects/AutoDCF
+   git clone https://github.com/Student-of-Python/AutomaticDCF
    pip install -r requirements.txt
+   pip install -e
 
 ## Usage
 

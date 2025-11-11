@@ -1,5 +1,5 @@
 from ReadManualInputs import read_manual_inputs
-from AutoDCF.DCF.dcf_main import DCF
+from DCF.dcf_main import DCF
 
 manual_input = read_manual_inputs()
 

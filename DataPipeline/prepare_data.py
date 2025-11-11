@@ -1,8 +1,8 @@
-from AutoDCF.DataPipeline.fundamental_collector import ExtractFundamentals
-from typing import Union, Optional, Literal
-from AutoDCF.DataPipeline.searchonline import search
-from AutoDCF.DataPipeline.api_clients import *
-from AutoDCF.DataPipeline.helper import *
+from DataPipeline.fundamental_collector import ExtractFundamentals
+from typing import Literal, Optional, Union
+from DataPipeline.searchonline import search
+from DataPipeline.api_clients import *
+from DataPipeline.helper import *
 
 
 class PrepareData:

@@ -1,6 +1,6 @@
-from AutoDCF.DCF.Historical_Rates_Functions import HistoricalRates
-from AutoDCF.DataPipeline.helper import manual_init
-from AutoDCF.DataPipeline.prepare_data import PrepareData
+from DCF.Historical_Rates_Functions import HistoricalRates
+from DataPipeline.prepare_data import manual_init
+from DataPipeline.prepare_data import PrepareData
 from typing import Union, Optional, List
 import numpy as np
 import pandas as pd
@@ -375,4 +375,4 @@ class DCF(PrepareData):
 
             # Format data table columns
             header_fmt_table = wb.add_format({
-                "bold": True, "bg_color": "#DCE6F1", "border": 1,
+                "bold": True, "bg_color": "#DCE6F1", "border": 1,})
