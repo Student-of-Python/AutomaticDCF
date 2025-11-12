@@ -26,7 +26,7 @@ Key components and techniques implemented in the project include:
    ```bash
    git clone https://github.com/Student-of-Python/AutomaticDCF
    pip install -r requirements.txt
-   pip install -e
+   pip install -e .
 
 ## Usage
 
