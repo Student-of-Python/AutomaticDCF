@@ -3,7 +3,7 @@ from typing import Union, Optional
 
 
 @dataclass
-class CapitalCostInput:
+class CapitalCostConfig:
     beta: Union[float, int]
     risk_free: Union[float, int] #Risk Free Rate
     equity_risk_prem: Union[float, int] #Equity Premuim Rate
@@ -26,7 +26,7 @@ class CapitalCostCalculator:
     Cost of Equity
     Cost of Debt
     """
-    def __init__(self, config: CapitalCostInput):
+    def __init__(self, config: CapitalCostConfig):
         self._config = config
 
     def get_cost_of_debt(self) -> Union[float, int]:

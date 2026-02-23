@@ -45,16 +45,29 @@ class ProcessHTTPRequests:
         return text
 
     @staticmethod
+    def parse_json(res: Response) -> Optional[str]:
+        """
+        :param res:
+        :return:
+        """
+        ProcessHTTPRequests._valid_response(res)
+        js = res.json()
+        return js
+
+    @staticmethod
     def parse_dataframe_from_text(text: str) -> Optional[pd.DataFrame]:
         json_ = ProcessHTTPRequests.parse_json_from_text(text)
         data = ProcessHTTPRequests.parse_dataframe_from_json(json_)
         return data
+
     @staticmethod
     def parse_dataframe_from_response(res: Response) -> Optional[pd.DataFrame]:
         ProcessHTTPRequests._valid_response(res)
-        #TODO: Handle Error exceptions
-        data = ProcessHTTPRequests.parse_dataframe_from_text(res.text)
+        #TODO: Handle Error exceptions. Do I even need this?
+        data = ProcessHTTPRequests.parse_dataframe_from_text(res.content)
         return data
+
+
 
     @staticmethod
     def parse_json_from_text(text: str) -> Optional[dict]:
