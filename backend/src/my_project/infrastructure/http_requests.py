@@ -45,7 +45,6 @@ class HTTPFetch:
             timeout=self._config.timeout,
             headers=self._config.headers,
         )
-
         res.raise_for_status()
         return res
 
