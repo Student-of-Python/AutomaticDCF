@@ -39,6 +39,6 @@ class YieldRateSearch(HTTPFetch):
 
         yield_rate = float(yield_rate)
 
-        return yield_rate
+        return float(yield_rate / 100)
 
 
