@@ -1,4 +1,4 @@
-from my_project.infrastructure.request_fundamentals import RequestFundamentals
+from my_project.infrastructure.Fundamentals.request_fundamentals import RequestFundamentals
 
 def run():
     pass

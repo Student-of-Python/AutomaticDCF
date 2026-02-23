@@ -6,6 +6,8 @@ Given URL, it will scrape content and return it
 """""
 from dataclasses import dataclass
 from requests import Response
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from typing import Optional
 import requests
 
@@ -14,6 +16,7 @@ class HTTPFetchConfig:
     max_size_mb: int = 1
     timeout: int = 10
     headers: Optional[dict] = None
+    safety: bool = True
 
 class HTTPFetch:
     def __init__(self, config: HTTPFetchConfig):
@@ -26,7 +29,21 @@ class HTTPFetch:
                     "AppleWebKit/537.36 (KHTML, like Gecko) "
                     "Chrome/141.0.0.0 Safari/537.36"
                 )}
+
         self._session = requests.Session()
+
+        retry_strategy = Retry(
+            total=5,
+            backoff_factor=2,  # exponential backoff
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["HEAD", "GET", "OPTIONS"]
+        )
+
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self._session.mount("https://", adapter)
+        self._session.mount("https://", adapter)
+
+
 
 
     def search(self, url: str, params: Optional[dict] = None) -> Optional[Response]:
@@ -36,7 +53,7 @@ class HTTPFetch:
         :return: http response
         """
 
-        if not self._is_safe(url):
+        if self._config.safety and not self._is_safe(url):
             return None
 
         res = self._session.get(

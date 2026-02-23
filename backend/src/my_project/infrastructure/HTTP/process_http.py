@@ -5,39 +5,56 @@ import pandas as pd
 import re
 import json
 
+"""
+ProcessHTTPRequests
 
+Collection of helping functions
+"""
 
 
 class ProcessHTTPRequests:
-
-
-    def parse_table(self, res: Response) -> Optional[List[pd.DataFrame]]:
+    @staticmethod
+    def parse_table(res: Response) -> Optional[List[pd.DataFrame]]:
         """
         :param res: http response
         :return: table, if found
         """
-        self._valid_response(res)
+        ProcessHTTPRequests._valid_response(res)
         tables = pd.read_html(res.content)
         return tables
 
-    def parse_content(self, res: Response) -> Optional[str]:
+    @staticmethod
+    def parse_content(res: Response) -> Optional[str]:
         """
         :param res:
         :return: contents of the site (pdf, images, audio)
         """
 
-        self._valid_response(res)
+        ProcessHTTPRequests._valid_response(res)
         content = res.content
         return content
 
-    def parse_text(self, res: Response) -> Optional[str]:
+    @staticmethod
+    def parse_text(res: Response) -> Optional[str]:
         """
         :param res:
         :return: text of website
         """
-        self._valid_response(res)
+        ProcessHTTPRequests._valid_response(res)
         text = res.text
         return text
+
+    @staticmethod
+    def parse_dataframe_from_text(text: str) -> Optional[pd.DataFrame]:
+        json_ = ProcessHTTPRequests.parse_json_from_text(text)
+        data = ProcessHTTPRequests.parse_dataframe_from_json(json_)
+        return data
+    @staticmethod
+    def parse_dataframe_from_response(res: Response) -> Optional[pd.DataFrame]:
+        ProcessHTTPRequests._valid_response(res)
+        #TODO: Handle Error exceptions
+        data = ProcessHTTPRequests.parse_dataframe_from_text(res.text)
+        return data
 
     @staticmethod
     def parse_json_from_text(text: str) -> Optional[dict]:
@@ -87,7 +104,7 @@ class ProcessHTTPRequests:
         if not isinstance(res, Response):
             raise ValueError("[ERROR] Given object is not response")
 
-        if not Response.ok:
+        if not res.ok:
             raise ValueError("[ERROR] Not a valid response")
 
 

@@ -3,17 +3,14 @@ Request Fundamentals
 ======================
 Responsibility: Return Fundemental Data for ticker from MACROTRENDS
 """
-from http_requests import HTTPFetch, HTTPFetchConfig
+from my_project.infrastructure.HTTP.http_requests import HTTPFetch, HTTPFetchConfig
 from dataclasses import dataclass
-from typing import Optional
 from enum import Enum
-import pandas as pd
 import requests
 
 @dataclass
 class RequestFundamentalsConfig:
     ticker: str
-    years: int = 3
     pass
 
 class StatementType(Enum):
@@ -69,16 +66,18 @@ class RequestMacroFundamentals(HTTPFetch):
         incomplete_url = f"https://www.macrotrends.net/stocks/charts/{ticker}"
         response = requests.get(incomplete_url, allow_redirects=True,
                                 headers={"User-Agent": "Mozilla/5.0"}, timeout=5)
-        return f"{response.url}{statement_type.macro_label}"
 
-    def __init___(self, config: RequestFundamentalsConfig, search_config: HTTPFetchConfig):
+        resolved = response.url.rstrip("/")
+        return f"{resolved}/{statement_type.macro_label}" #Problems with link redirects
+
+    def __init__(self, config: RequestFundamentalsConfig, search_config: HTTPFetchConfig):
         """
         :param config: Config Attributes
         :param request: http request obj
         :return:
         """
         super().__init__(search_config)
-        self._config = config
+        self._http_config = config
 
     def request_macro_data(self, statement_type: StatementType):
         """
@@ -86,13 +85,15 @@ class RequestMacroFundamentals(HTTPFetch):
         :return:
         """
 
-        url = self._get_complete_url(self._config.ticker, statement_type)
+        url = self._get_complete_url(self._http_config.ticker, statement_type)
+
+        print(url)
 
         return self.search(url)
 
 
     def _get_url(self, statement_type: StatementType) -> str:
-        return self._get_complete_url(self._config.ticker, statement_type)
+        return self._get_complete_url(self._http_config.ticker, statement_type)
 
 
 
