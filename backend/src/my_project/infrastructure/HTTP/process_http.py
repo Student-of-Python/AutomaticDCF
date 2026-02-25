@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from bs4 import BeautifulSoup
 from requests import Response
 import pandas as pd
@@ -45,7 +45,7 @@ class ProcessHTTPRequests:
         return text
 
     @staticmethod
-    def parse_json(res: Response) -> Optional[str]:
+    def parse_json(res: Response) -> Optional[Dict[str, Any]]:
         """
         :param res:
         :return:

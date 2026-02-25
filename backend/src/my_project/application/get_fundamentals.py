@@ -17,9 +17,9 @@ class GetFundamentals:
     
     """""
 
-    def __init__(self, request_config: RequestFundamentalsConfig, search_config: HTTPFetchConfig, process_config: ProcessMacroFundamentalsConfigs ):
-        self._search = RequestMacroFundamentals(request_config, search_config)
-        self._process = ProcessMacroFundamentals(process_config)
+    def __init__(self, ticker: str, period: int, search_config: HTTPFetchConfig):
+        self._search = RequestMacroFundamentals(ticker, search_config)
+        self._process = ProcessMacroFundamentals(period)
 
     def request_stmts(self) -> Tuple[Optional[pd.DataFrame], Optional[pd.DataFrame],Optional[pd.DataFrame]]:
         income = self.request_income_stmt()
@@ -59,22 +59,5 @@ class GetFundamentals:
         return cash
 
 
-request_config = RequestFundamentalsConfig(
-    ticker = 'AAPL'
-)
 
-
-
-search_config = HTTPFetchConfig(safety=False)
-
-
-process_config = ProcessMacroFundamentalsConfigs()
-
-req = GetFundamentals(request_config, search_config, process_config)
-
-
-a,b,c = req.request_stmts()
-print(a.head())
-print(b.head())
-print(c.head())
 

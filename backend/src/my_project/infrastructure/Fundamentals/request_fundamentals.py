@@ -70,14 +70,14 @@ class RequestMacroFundamentals(HTTPFetch):
         resolved = response.url.rstrip("/")
         return f"{resolved}/{statement_type.macro_label}" #Problems with link redirects
 
-    def __init__(self, config: RequestFundamentalsConfig, search_config: HTTPFetchConfig):
+    def __init__(self, ticker: str, search_config: HTTPFetchConfig):
         """
         :param config: Config Attributes
         :param request: http request obj
         :return:
         """
         super().__init__(search_config)
-        self._http_config = config
+        self.ticker = ticker.upper()
 
     def request_macro_data(self, statement_type: StatementType):
         """
@@ -85,15 +85,13 @@ class RequestMacroFundamentals(HTTPFetch):
         :return:
         """
 
-        url = self._get_complete_url(self._http_config.ticker, statement_type)
-
-        print(url)
+        url = self._get_complete_url(self.ticker, statement_type)
 
         return self.search(url)
 
 
     def _get_url(self, statement_type: StatementType) -> str:
-        return self._get_complete_url(self._http_config.ticker, statement_type)
+        return self._get_complete_url(self.ticker, statement_type)
 
 
 

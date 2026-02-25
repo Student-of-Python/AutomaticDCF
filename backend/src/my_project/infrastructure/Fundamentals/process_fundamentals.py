@@ -20,8 +20,8 @@ class ProcessMacroFundamentalsConfigs:
 
 
 class ProcessMacroFundamentals:
-    def __init__(self, config: ProcessMacroFundamentalsConfigs):
-        self._config = config
+    def __init__(self, period: int):
+        self.period = max(0, period)
 
     @staticmethod
     def _align_columns(data: pd.DataFrame, mapping: dict) -> pd.DataFrame:
@@ -76,13 +76,13 @@ class ProcessMacroFundamentals:
         """
 
         if statement_type == StatementType.income_statement:
-            data =  self._process_income_stmt(data)[:self._config.years_back]
+            data =  self._process_income_stmt(data)[:self.period]
 
         elif statement_type == StatementType.balance_statement:
-            data =  self._process_balance_stmt(data)[:self._config.years_back]
+            data =  self._process_balance_stmt(data)[:self.period]
 
         elif statement_type == StatementType.cash_statement:
-            data =  self._process_cash_stmt(data)[:self._config.years_back]
+            data =  self._process_cash_stmt(data)[:self.period]
 
         data *= 1_000_000 #Reported in Millions (ASSUMED)
 

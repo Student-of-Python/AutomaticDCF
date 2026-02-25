@@ -9,14 +9,16 @@ from typing import Optional
 
 @dataclass
 class FMPDataConfig:
+    ticker: str
     API_key: str
 
 class FMPData(HTTPFetch):
-    def __init__(self, config: FMPDataConfig, search_config: HTTPFetchConfig):
+    def __init__(self, ticker: str, config: FMPDataConfig, search_config: HTTPFetchConfig):
         super().__init__(search_config)
+        self.ticker = ticker
         self.__api_key = config.API_key
 
-    def get_profile(self, ticker: str) -> Optional[pd.DataFrame]:
+    def get_profile(self) -> Optional[dict]:
         """
         :param ticker:
         :return:
@@ -25,7 +27,7 @@ class FMPData(HTTPFetch):
         url = "https://financialmodelingprep.com/stable/profile"
 
         params = {
-            "symbol": ticker,
+            "symbol": self.ticker,
             "apikey": self.__api_key,
         }
 
@@ -33,9 +35,7 @@ class FMPData(HTTPFetch):
 
         res = ProcessHTTPRequests.parse_json(res)
 
-        data = pd.DataFrame(res)
-
-        return data
+        return res
 
 
 

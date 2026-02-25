@@ -1,0 +1,10 @@
+{
+  "General" : {
+    "Ticker" : "AAPL",
+    "Periods" : 4
+  },
+  "Valuation": {
+    "beta" : 1,
+    ""
+  }
+}
