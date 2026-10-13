@@ -20,6 +20,7 @@ class FinancialStatements:
     balance: DataFrame
     cash: DataFrame
 
+
 @dataclass(frozen=True)
 class CompanyProfile:
     '''
@@ -29,3 +30,12 @@ class CompanyProfile:
     beta: float
     shares_outstanding: float
     ev_multiple: Optional[float]
+
+@dataclass(frozen=True)
+class MacroVariables:
+    '''
+    Macro Economic Variables
+    '''
+
+    yield_rate: float
+    equity_premium: float
