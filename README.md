@@ -78,7 +78,7 @@ Alternate action sequence: Unknown company
 Alternate action sequence: Corrupted Data
 1-2. ...
 3. Application detects missing data needed for calculation -- fails to proceed forward
-
+ 
 Postcondition: DCF calculator will have all necessary data to form a valuation
 Nonfunctional requirements: Needs to scrape websites for financial data; updated from time to time for static vars
 Glossary: MacroTrends website is the website that will be scraped from. Static vars is refering to non-financial statement variables (ex: risk free rate)
@@ -99,7 +99,9 @@ Postcondition: None, application terminates? Or waits for next input
 Nonfunctional requirements: Outputs depending on user preference??
 Glossary: DCF valuation method is regarding the two types of DCF methods: exit multiple and perpetuity
 
+## Sections 
 
+### 
 
 ## Misc
 
