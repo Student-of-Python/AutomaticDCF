@@ -6,9 +6,8 @@ class ErrorCode(StrEnum):
 class IncomeStatementCols(StrEnum):
     REVENUE = 'REVENUE'
     EBITDA = 'EBITDA'
-    EBT = 'EBT'
-    INCOME_TAX_EXPENSE = 'INCOME_TAX_EXPENSE'
-    INTEREST_EXPENSE = 'INTEREST_EXPENSE'
+    EBIT = 'EBIT'
+    #Need interest expense???
 
 class CashStatementCols(StrEnum):
     DEPRECIATION = 'DEPRECIATION'
@@ -20,4 +19,4 @@ class BalanceSheetCols(StrEnum):
     TOTAL_DEBT = 'TOTAL_DEBT'
     TOTAL_CURRENT_ASSETS = 'TOTAL_CURRENT_ASSETS'
     TOTAL_CURRENT_LIABILITIES = 'TOTAL_CURRENT_LIABILITIES'
-    CASH_ON_HAND = 'CASH_ON_HAND '
+    CASH_ON_HAND = 'CASH_ON_HAND'
