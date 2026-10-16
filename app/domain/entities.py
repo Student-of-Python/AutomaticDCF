@@ -18,9 +18,10 @@ class FinancialStatements:
 
     --> Should these be dataframes, or some other data type?
     '''
-    income: DataFrame
-    balance: DataFrame
-    cash: DataFrame
+    income: DataFrame | Error
+    balance: DataFrame | Error
+    cash: DataFrame | Error
+
 
 
 @dataclass(frozen=True)
@@ -49,22 +50,32 @@ class Error:
     details: Optional[dict[str, Any]] = None
 
     @classmethod
-    def failed_request(cls, request_msg: str, params: dict):
+    def failed_request(cls, request_msg: str, params: dict) -> Error:
         return cls(code = ErrorCode.FAILED_REQUEST, msg = request_msg, details = params)
 
-@dataclass
-class Result:
-    value: Any = None
-    error: Optional[Error] = None
+    @classmethod
+    def invalid_data(cls, msg: str, details: dict) -> Error:
+        return cls(code = ErrorCode.INVALID_DATA, msg = msg, details = details)
+
+    def __repr__(self) -> str:
+        return (f'ERROR: {self.code} '
+                f'MSG: {self.msg} '
+                f'DETAILS: {self.details}')
+
+@dataclass(frozen=True)
+class Result[T]:
+    value: T | None = None
+    error: Error | None = None
 
     @property
     def is_success(self) -> bool:
         return self.error is None
 
     @classmethod
-    def success(cls, result: Any) -> Result:
+    def success(cls, result: T) -> Result[T]:
         return cls(value=result)
 
     @classmethod
-    def failed(cls, error: Error) -> Result:
+    def failed(cls, error: Error) -> Result[T]:
         return cls(error = error)
+
