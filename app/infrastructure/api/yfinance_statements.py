@@ -26,21 +26,21 @@ class YFinanceStatementsAdapter(StatementAdapter):
         :return: 
         
         '''
-        return self._ticker.cash_flow
+        return self._ticker.cash_flow.T
 
 
     def _get_balance(self) -> DataFrame:
         '''
             
         '''
-        return self._ticker.balance_sheet
+        return self._ticker.balance_sheet.T
 
     def _get_income(self) -> DataFrame:
         '''
 
         :return:
         '''
-        return self._ticker.income_stmt
+        return self._ticker.income_stmt.T
 
     @property
     def _income_mapping(self) -> dict[str, str]:
