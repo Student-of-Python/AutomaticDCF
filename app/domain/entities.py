@@ -1,5 +1,5 @@
 '''
-app/data/domain/values.py
+app/data/domain/entities.py
 
 holds dataclasses
 '''
@@ -18,11 +18,17 @@ class FinancialStatements:
 
     --> Should these be dataframes, or some other data type?
     '''
-    income: DataFrame | Error
-    balance: DataFrame | Error
-    cash: DataFrame | Error
+    income: DataFrame
+    balance: DataFrame
+    cash: DataFrame
 
-
+@dataclass(frozen=True)
+class CompanyProfile:
+    country: str
+    beta: float
+    shares_outstanding: int
+    current_price: float
+    ev_ebitda_multiple: float | int | None = None
 
 @dataclass(frozen=True)
 class CompanyProfile:
@@ -79,3 +85,5 @@ class Result[T]:
     def failed(cls, error: Error) -> Result[T]:
         return cls(error = error)
 
+class InvalidDataTypeError(Exception):
+    pass
