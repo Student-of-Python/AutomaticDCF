@@ -1,9 +1,5 @@
 from enum import StrEnum
 
-class ErrorCode(StrEnum):
-    FAILED_REQUEST = "FAILED_REQUEST"
-    INVALID_DATA = 'INVALID_DATA'
-
 class StatementCols(StrEnum):
     @classmethod
     def values_as_tuple(cls) -> tuple[str, ...]:
@@ -14,8 +10,6 @@ class IncomeStatementCols(StatementCols):
     EBITDA = 'EBITDA'
     EBIT = 'EBIT'
     #Need interest expense???
-
-
 
 class CashStatementCols(StatementCols):
     DEPRECIATION = 'DEPRECIATION'
@@ -28,3 +22,4 @@ class BalanceSheetCols(StatementCols):
     TOTAL_CURRENT_ASSETS = 'TOTAL_CURRENT_ASSETS'
     TOTAL_CURRENT_LIABILITIES = 'TOTAL_CURRENT_LIABILITIES'
     CASH_ON_HAND = 'CASH_ON_HAND'
+
