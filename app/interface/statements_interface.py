@@ -1,5 +1,5 @@
 '''
-app/infrastructure/api/interface_statements.py
+app/infrastructure/api/statements_interface.py
 '''
 from app.domain.enums import IncomeStatementCols, CashStatementCols, BalanceSheetCols, ErrorCode
 from app.domain.entities import FinancialStatements, Result, Error, InvalidDataTypeError
