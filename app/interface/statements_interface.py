@@ -1,8 +1,9 @@
 '''
 app/infrastructure/api/statements_interface.py
 '''
-from app.domain.enums import IncomeStatementCols, CashStatementCols, BalanceSheetCols, ErrorCode
-from app.domain.entities import FinancialStatements, Result, Error, InvalidDataTypeError
+from app.domain.enums import IncomeStatementCols, CashStatementCols, BalanceSheetCols
+from app.domain.entities import FinancialStatements, Result
+from app.domain.exceptions import ErrorCode,InvalidDataTypeError,Error
 from abc import ABC, abstractmethod
 from pandas import DataFrame
 
