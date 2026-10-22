@@ -2,7 +2,7 @@
 app\infrastructure\api\yfinance_data.py
 '''
 from app.domain.enums import IncomeStatementCols, CashStatementCols, BalanceSheetCols
-from .interface import StatementAdapter
+from app.interface.statements_interface import StatementAdapter
 from pandas import DataFrame
 import yfinance as yf
 

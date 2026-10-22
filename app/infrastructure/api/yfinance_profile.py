@@ -1,34 +1,34 @@
 '''
 app/infrastructure/api/yfinance_profile.py
 '''
-from .profile_interface import ProfileAdapter
+from app.interface.profile_interface import ProfileAdapter
+from typing import Any
 import yfinance as yf
 
 
 class YFinanceProfileAdapter(ProfileAdapter):
 
+    _FIELD_MAPPING = {'country' : 'country',
+                'beta' : 'beta',
+                'shares_outstanding' : 'sharesOutstanding',
+                'current_price' : 'previousClose',
+                'ev_ebitda_multiple' : 'enterpriseToEbitda'}
+
 
     def __init__(self, ticker: str):
-        self._info: dict[str, str] = yf.Ticker(ticker = ticker).info
-
-    def _get_country(self) -> str | None:
-        '''Gets Country'''
-        return self._info.get('country', None)
-
-    def _get_beta(self) -> float | None:
-        '''returns beta'''
-        return self._info.get('beta', None)
+        self._ticker = ticker
 
 
-    def _get_shares_outstanding(self) -> int | None:
-        '''Gets shares'''
-        return self._info.get('sharesOutstanding', None)
+    def _fetch_profile_data(self) -> dict[str, Any]:
+        '''Gets necessary info'''
 
+        info = yf.Ticker(ticker = self._ticker).info
 
-    def _get_current_price(self) -> float | None:
-        '''Gets current price'''
-        return self._info.get('previousClose', None)
+        return self._convert(info)
 
-    def _get_ev_ebitda_multiple(self) -> float | None:
-        '''Gets multiple??'''
-        return self._info.get('enterpriseToEbitda', None)
+    @staticmethod
+    def _convert(data: dict[str, Any]) -> dict[str, Any]:
+        '''Converts yfinance names to internal'''
+
+        return {k : data.get(v) for k,v in YFinanceProfileAdapter._FIELD_MAPPING.items()}
+
