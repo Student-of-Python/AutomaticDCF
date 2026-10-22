@@ -2,7 +2,7 @@
 app/infrastructure/api/profile_interface.py
 TODO: Add tests
 '''
-from app.domain.entities import Result, CompanyProfile, ErrorCode, Error, InvalidDataTypeError
+from app.domain.entities import Result, CompanyProfile, Error, InvalidDataTypeError
 from abc import ABC, abstractmethod
 from typing import Any
 
