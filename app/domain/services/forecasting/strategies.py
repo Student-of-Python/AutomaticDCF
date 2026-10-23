@@ -33,14 +33,10 @@ class HistoricalAverageForecast:
 
 class RollingAverageForecast:
     '''Rolling average -> take average of sliding window until horizon'''
-
-
     def __init__(self, window: int | None = None):
         if window is not None and window <= 0:
             raise ValueError(f"Window must be a positive integer, got {window}")
         self._window = window
-
-
 
     def forecast(self,  data_series: Sequence[int | float], horizon: int = 3) -> list[float]:
         ''''''
