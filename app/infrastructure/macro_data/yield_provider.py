@@ -60,10 +60,19 @@ class TradingEconomicsYieldProvider:
             )
         }
 
-        response = requests.get(_url, headers=_HEADERS, timeout = self._timeout)
-        response.raise_for_status()
+        try:
+            response = requests.get(_url, headers=_HEADERS, timeout = self._timeout)
+            response.raise_for_status()
+        except requests.exceptions.Timeout as err:
+            raise TimeoutError(str(err)) from err
+        except requests.exceptions.ConnectionError as err:
+            raise ConnectionError(str(err)) from err
 
-        tables = pd.read_html(io.StringIO(response.text))
+        return self._format_table_to_dict(response.text)
+
+    @staticmethod
+    def _format_table_to_dict(text: str) -> dict[str, float]:
+        tables = pd.read_html(io.StringIO(text))
 
         dfs = [
             df.iloc[:, [1, 2]].set_axis(["country", "yield"], axis=1)
