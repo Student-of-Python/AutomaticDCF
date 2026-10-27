@@ -6,37 +6,21 @@ from app.domain.entities import FinancialStatements, Result
 from app.domain.exceptions import ErrorCode,InvalidDataTypeError,Error
 from abc import ABC, abstractmethod
 from pandas import DataFrame
+from typing import TypeAlias
 
-from typing import Any
+Income: TypeAlias = DataFrame
+Balance: TypeAlias = DataFrame
+Cash: TypeAlias = DataFrame
 
 class StatementAdapter(ABC):
     '''
         Acquires financial statements
     '''
 
-
     @abstractmethod
-    def _get_income(self) -> Any:
-        '''
-            Gets income statement
-        '''
-        ...
-
-    @abstractmethod
-    def _get_cash(self) -> Any:
-        '''
-            Returns cash statement
-        '''
-        ...
-
-    @abstractmethod
-    def _get_balance(self) -> Any:
-        '''
-
-            Returns balance sheet
-
-        '''
-        ...
+    def _fetch_raw_statements(self, ticker: str) -> tuple[Income, Balance, Cash]:
+        '''fetches financial statements as dataframe'''
+        pass
 
     @staticmethod
     def _convert(raw_data: DataFrame, col_mapping: dict) -> DataFrame:
@@ -62,20 +46,23 @@ class StatementAdapter(ABC):
                                       })) #Error has __repr___
 
 
-    def get_statements(self) -> Result[FinancialStatements]:
+    def get_statements(self, ticker: str) -> Result[FinancialStatements]:
         '''
         :return:
         '''
-
+        #TODO: makke ticker a stateless, not instance
 
         try:
-            balance = self._convert(self._get_balance(), self._balance_mapping)
+
+            r_income, r_balance, r_cash = self._fetch_raw_statements(ticker = ticker)
+
+            balance = self._convert(r_balance, self._balance_mapping)
             self._validate(balance, BalanceSheetCols.values_as_tuple())
 
-            cash = self._convert(self._get_cash(), self._cash_mapping)
+            cash = self._convert(r_cash, self._cash_mapping)
             self._validate(cash, CashStatementCols.values_as_tuple())
 
-            income = self._convert(self._get_income(), self._income_mapping)
+            income = self._convert(r_income, self._income_mapping)
             self._validate(income, IncomeStatementCols.values_as_tuple())
 
         except (ConnectionError, TimeoutError) as err:
@@ -101,7 +88,6 @@ class StatementAdapter(ABC):
                 msg = 'Unknown Error Occured!',
                 details = {'Error message' : err}
             ))
-
 
         return Result.success(result =
                               FinancialStatements(

@@ -12,7 +12,7 @@ class ProfileAdapter(ABC):
     ''''''
 
     @abstractmethod
-    def _fetch_profile_data(self) -> Any:
+    def _fetch_profile_data(self, ticker:str) -> Any:
         ...
 
     @staticmethod
@@ -28,11 +28,11 @@ class ProfileAdapter(ABC):
         if _are_missing:
             raise InvalidDataTypeError(f"Expected key mismatch. Redundant keys: {set(data.keys()) - _key}")
 
-    def get_profile(self) -> Result[CompanyProfile]:
+    def get_profile(self, ticker: str) -> Result[CompanyProfile]:
         ''''''
 
         try:
-            data = self._fetch_profile_data()
+            data = self._fetch_profile_data(ticker = ticker)
             self._validate(data)
             profile = CompanyProfile.from_dict(data)
 
