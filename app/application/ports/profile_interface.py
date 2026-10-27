@@ -1,5 +1,5 @@
 '''
-app/infrastructure/api/profile_interface.py
+app/infrastructure/company_data/profile_interface.py
 TODO: Add tests
 '''
 from app.domain.exceptions import ErrorCode, Error, InvalidDataTypeError
@@ -69,7 +69,7 @@ class ProfileAdapter(ABC):
 
 '''
 Need to finish validation
-Restructure interface 
+Restructure ports 
 Reimplement Yfinance profile 
 
 -> Design in such a way that is it resilent. 

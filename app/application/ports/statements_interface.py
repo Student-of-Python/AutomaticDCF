@@ -1,5 +1,5 @@
 '''
-app/infrastructure/api/statements_interface.py
+app/infrastructure/company_data/statements_interface.py
 '''
 from app.domain.enums import IncomeStatementCols, CashStatementCols, BalanceSheetCols
 from app.domain.entities import FinancialStatements, Result

@@ -1,5 +1,5 @@
 '''
-app/interface/variables_interface.py
+app/ports/variables_interface.py
 '''
 from app.domain.entities import MacroVariables, Result
 from app.domain.exceptions import Error, ErrorCode
