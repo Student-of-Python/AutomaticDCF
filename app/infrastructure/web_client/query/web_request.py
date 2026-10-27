@@ -1,5 +1,5 @@
 '''
-app/infrastructure/web/query/web_request.py
+app/infrastructure/web_client/query/web_request.py
 '''
 from app.domain import Result, Error, ErrorCode
 from typing import TypeVar, Optional
@@ -38,19 +38,19 @@ class WebRequest:
 
         '''
 
-        _attempted = False
+        _attempted = False #This will not make any sense. Does not reset locally.
 
-        res = requests.get(url = url, params=params, headers=self._header, timeout = self._timeout)
+        res = requests.get(url = url, params=params, headers=self._header, timeout = self._timeout,  allow_redirects=True)
 
         try:
            res.raise_for_status()
-
         except requests.exceptions.HTTPError as err:
             if res.status_code == 429 and not _attempted:
                 #Too many requests in short amount of time.
-                print("Too many requests in short amount of time!")
+                print(f"Too many requests in short amount of time: {err}")
                 print(f"Waiting: {self._wait} seconds")
                 time.sleep(self._wait)
+                _attempted = True
                 return self.request(url = url, params = params)
 
             return Result.failed(

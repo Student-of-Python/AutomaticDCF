@@ -2,8 +2,7 @@
 app\infrastructure\api\yfinance_data.py
 '''
 from app.domain.enums import IncomeStatementCols, CashStatementCols, BalanceSheetCols
-from app.interface.statements_interface import StatementAdapter
-from pandas import DataFrame
+from app.application.ports.statements_interface import StatementAdapter, Income, Balance, Cash
 import yfinance as yf
 
 
@@ -12,35 +11,19 @@ import yfinance as yf
 class YFinanceStatementsAdapter(StatementAdapter):
     '''
     Notes: Yahoofinance limited to only 4 years historical -- not bad for MVP, but may need to extend later on.
-
+    #TODO: Update the mappings based on the new statements cols added.
+    #TODO: Add years back later? For now, sticking to 4 years.
     '''
 
+    def _fetch_raw_statements(self, ticker: str) -> tuple[Income, Balance, Cash]:
+        ''''''
+        _ticker = yf.Ticker(ticker = ticker)
 
-    def __init__(self, ticker: str):
-        self._ticker = yf.Ticker(ticker=ticker)
-        #TODO: Add years back later? For now, sticking to 4 years.
+        income = _ticker.income_stmt.T
+        balance = _ticker.balance_sheet.T
+        cash = _ticker.cash_flow.T
 
-    def _get_cash(self) -> DataFrame:
-        '''
-        
-        :return: 
-        
-        '''
-        return self._ticker.cash_flow.T
-
-
-    def _get_balance(self) -> DataFrame:
-        '''
-            
-        '''
-        return self._ticker.balance_sheet.T
-
-    def _get_income(self) -> DataFrame:
-        '''
-
-        :return:
-        '''
-        return self._ticker.income_stmt.T
+        return income, balance, cash
 
     @property
     def _income_mapping(self) -> dict[str, str]:
@@ -48,6 +31,9 @@ class YFinanceStatementsAdapter(StatementAdapter):
         'Total Revenue': IncomeStatementCols.REVENUE,
         'EBITDA': IncomeStatementCols.EBITDA,
         'EBIT': IncomeStatementCols.EBIT,
+        'Pretax Income' : IncomeStatementCols.PRETAX_INCOME,
+        'Tax Provision' : IncomeStatementCols.INCOME_TAX_EXPENSE,
+        'Interest Expense' : IncomeStatementCols.INTEREST_EXPENSE
     }
 
     @property
@@ -67,4 +53,3 @@ class YFinanceStatementsAdapter(StatementAdapter):
         'Capital Expenditure': CashStatementCols.CAPEX,
         'Operating Cash Flow': CashStatementCols.CASH_OPERATING,
     }
-

@@ -1,5 +1,5 @@
 '''
-app/infrastructure/web/interface.py
+app/infrastructure/web_client/statements_interface.py
 ======================================
 '''
 from abc import ABC, abstractmethod

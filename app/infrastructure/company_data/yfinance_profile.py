@@ -1,7 +1,7 @@
 '''
-app/infrastructure/api/yfinance_profile.py
+app/infrastructure/company_data/yfinance_profile.py
 '''
-from app.interface.profile_interface import ProfileAdapter
+from app.application.ports import ProfileAdapter
 from typing import Any
 import yfinance as yf
 
@@ -15,14 +15,10 @@ class YFinanceProfileAdapter(ProfileAdapter):
                 'ev_ebitda_multiple' : 'enterpriseToEbitda'}
 
 
-    def __init__(self, ticker: str):
-        self._ticker = ticker
-
-
-    def _fetch_profile_data(self) -> dict[str, Any]:
+    def _fetch_profile_data(self, ticker: str) -> dict[str, Any]:
         '''Gets necessary info'''
 
-        info = yf.Ticker(ticker = self._ticker).info
+        info = yf.Ticker(ticker = ticker).info
 
         return self._convert(info)
 

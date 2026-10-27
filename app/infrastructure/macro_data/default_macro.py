@@ -1,7 +1,7 @@
 '''
-app/infrastructure/api/default_macro.py
+app/infrastructure/company_data/default_macro.py
 '''
-from app.interface.variables_interface import MacroAdapter, RiskFree, EquityPremium
+from app.application.ports.variables_interface import MacroAdapter, RiskFree, EquityPremium
 
 
 class DefaultMacroAdapter(MacroAdapter):
