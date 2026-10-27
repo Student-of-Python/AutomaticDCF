@@ -14,20 +14,20 @@ from dataclasses import dataclass
 
 @dataclass(frozen = True)
 class CalculateDCFUseCase:
-    statement_factory: StatementAdapter
-    profile_factory: ProfileAdapter
-    macro_factory: MacroAdapter
+    statement_adapter: StatementAdapter
+    profile_adapter: ProfileAdapter
+    macro_adapter: MacroAdapter
     strategy_config: StrategyConfig
 
     def execute(self, request: CalculateDCFRequest) -> Result[CalculateDCFResponse]:
         '''Executes dcf logic'''
 
-        statements = self.statement_factory.get_statements(request.ticker) # I need to make ticker a parameter --> stateless
+        statements = self.statement_adapter.get_statements(request.ticker) # I need to make ticker a parameter --> stateless
 
         if not statements.is_success:
             return Result.failed(error = statements.error)
 
-        profile = self.profile_factory.get_profile(request.ticker)
+        profile = self.profile_adapter.get_profile(request.ticker)
 
         if not profile.is_success:
             return Result.failed(error = profile.error)
@@ -93,7 +93,7 @@ class CalculateDCFUseCase:
         equity_premium_rate = request.equity_risk_premium
 
         if risk_free_rate is None or equity_premium_rate is None:
-            macro_result = self.macro_factory.get_macro(country)
+            macro_result = self.macro_adapter.get_macro(country)
             if not macro_result.is_success:
                 return Result.failed(error=macro_result.error)
 
