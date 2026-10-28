@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DCF Valuation | Institutional Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --ink: #12233f;
+  --ink-soft: #3b4a63;
+  --muted: #6b778a;
+  --paper: #f7f8fa;
+  --sheet: #ffffff;
+  --rule: #dde1e8;
+  --rule-light: #edf0f5;
+  --navy: #0e1e38;
+  --navy-line: #223554;
+  --on-navy: #dbe3f0;
+  --on-navy-muted: #8b9db8;
+  --brass: #b08d3c;
+  --brass-hover: #c49e48;
+  --gain: #137752;
+  --gain-bg: #eaf6f0;
+  --loss: #ad3428;
+  --loss-bg: #fdf0ee;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100%; }
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.5;
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  min-height: 100vh;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+
+/* ---------- Assumptions rail (Left Column) ---------- */
+aside {
+  background: var(--navy);
+  color: var(--on-navy);
+  padding: 36px 30px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--navy-line);
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.brand-sub {
+  font-size: 13px;
+  color: var(--on-navy-muted);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+form {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  flex: 1;
+}
+
+.field { display: flex; flex-direction: column; }
+.field label, .field .lab {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--on-navy-muted);
+  margin-bottom: 8px;
+}
+
+.field output {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+input[type=text], input[type=number] {
+  width: 100%;
+  font: inherit;
+  color: #ffffff;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--navy-line);
+  padding: 8px 0;
+  border-radius: 0;
+  transition: border-color 0.2s;
+}
+
+input::placeholder { color: #4e6282; font-size: 13px; }
+
+input[type=text]#ticker {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  padding: 4px 0 8px;
+}
+
+input[type=text]:focus, input[type=number]:focus {
+  outline: none;
+  border-bottom-color: var(--brass);
+}
+
+.chips { display: flex; gap: 8px; margin-top: 10px; }
+.chips button {
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--on-navy);
+  background: transparent;
+  border: 1px solid var(--navy-line);
+  border-radius: 3px;
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chips button:hover {
+  border-color: var(--brass);
+  color: #ffffff;
+  background: rgba(176, 141, 60, 0.1);
+}
+
+input[type=range] {
+  width: 100%;
+  accent-color: var(--brass);
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #5c7091;
+  margin-top: 4px;
+}
+
+details {
+  border-top: 1px solid var(--navy-line);
+  padding-top: 16px;
+}
+
+summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--on-navy);
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--brass); font-size: 16px; font-weight: bold; line-height: 1; }
+details[open] summary::after { content: "–"; }
+
+.overrides { display: grid; gap: 16px; margin-top: 14px; }
+.overrides label { font-size: 12px; color: var(--on-navy-muted); display: block; margin-bottom: 2px; }
+.overrides input { font-size: 13px; }
+
+button.run {
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  background: var(--brass);
+  color: #0e1e38;
+  border: 0;
+  border-radius: 4px;
+  padding: 13px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s;
+  margin-top: auto;
+}
+
+button.run:hover { background: var(--brass-hover); }
+button.run:disabled { opacity: .7; cursor: progress; }
+
+.spin {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(14, 30, 56, 0.3);
+  border-top-color: #0e1e38;
+  border-radius: 50%;
+  animation: sp .7s linear infinite;
+}
+.spin[hidden] { display: none; }
+@keyframes sp { to { transform: rotate(360deg); } }
+
+/* ---------- Main report Area (Right Column) ---------- */
+main {
+  padding: 48px clamp(32px, 5vw, 80px) 72px;
+  max-width: 1040px;
+  width: 100%;
+}
+
+#error-card {
+  border-left: 3px solid var(--loss);
+  background: var(--loss-bg);
+  color: var(--loss);
+  padding: 14px 18px;
+  font-size: 14px;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 32px;
+}
+#error-card[hidden], #empty-state[hidden], #results-view[hidden] { display: none; }
+#error-card strong { display: block; margin-bottom: 3px; font-weight: 600; }
+
+#empty-state { padding-top: 10vh; max-width: 520px; }
+#empty-state h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 38px;
+  line-height: 1.15;
+  color: var(--navy);
+}
+#empty-state p {
+  color: var(--ink-soft);
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Header & Verdict */
+.headline-wrap { margin-bottom: 8px; }
+.headline {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(28px, 3.8vw, 40px);
+  line-height: 1.25;
+  color: var(--navy);
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+.headline .pct.up { color: var(--gain); font-style: italic; }
+.headline .pct.down { color: var(--loss); font-style: italic; }
+
+.byline {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 8px;
+  margin-bottom: 36px;
+}
+
+/* Price vs Value Gauge */
+.gauge {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 36px 36px 28px;
+  margin: 32px 0 44px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.gauge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.gauge-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.track-container {
+  position: relative;
+  padding: 56px 12px 48px;
+}
+
+.track {
+  position: relative;
+  height: 6px;
+  background: var(--rule-light);
+  border-radius: 3px;
+}
+
+.span {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+.span.up { background: var(--gain); }
+.span.down { background: var(--loss); }
+
+.mark {
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.mark::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 2px;
+  background: var(--navy);
+  transform: translateX(-50%);
+}
+
+.mark .v {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--navy);
+}
+
+.mark .k {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.mark.top { margin-top: -54px; }
+.mark.top::before { top: 100%; height: 20px; margin-top: 4px; }
+
+.mark.bottom { margin-top: 18px; }
+.mark.bottom::before { bottom: 100%; height: 20px; margin-bottom: 4px; }
+
+.mark .v, .mark .k { display: block; }
+.mark.top .k { margin-top: 4px; }
+.mark.bottom .k { margin-bottom: 4px; }
+
+.gauge-meta {
+  display: flex;
+  gap: 20px 32px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  flex-wrap: wrap;
+  align-items: center;
+  border-top: 1px solid var(--rule-light);
+  padding-top: 18px;
+  margin-top: 12px;
+}
+
+.gauge-meta b {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.verdict-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.verdict-badge.up { background: var(--gain-bg); color: var(--gain); border: 1px solid rgba(19, 119, 82, 0.2); }
+.verdict-badge.down { background: var(--loss-bg); color: var(--loss); border: 1px solid rgba(173, 52, 40, 0.2); }
+
+/* Bridge table */
+h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  color: var(--navy);
+  margin: 44px 0 6px;
+  letter-spacing: -0.01em;
+}
+
+.note {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.table-wrap {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 12px 24px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+td {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--rule-light);
+}
+
+td:first-child {
+  color: var(--ink-soft);
+}
+
+td:last-child {
+  text-align: right;
+  font-weight: 600;
+  color: var(--navy);
+  white-space: nowrap;
+  padding-left: 16px;
+}
+
+tr.sub td {
+  border-bottom: 1px solid var(--rule);
+  font-weight: 600;
+  color: var(--navy);
+}
+
+tr.total td {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 0;
+  padding-top: 16px;
+  padding-bottom: 8px;
+  color: var(--navy);
+}
+
+td small {
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.tvbar {
+  display: flex;
+  height: 8px;
+  margin-top: 18px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--rule-light);
+}
+
+.tvbar i { display: block; height: 100%; transition: width 0.3s ease; }
+.tvbar .a { background: var(--navy); }
+.tvbar .b { background: var(--brass); }
+
+.legend {
+  display: flex;
+  gap: 24px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 10px;
+}
+
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 1px;
+}
+
+.legend .a::before { background: var(--navy); }
+.legend .b::before { background: var(--brass); }
+
+.chart-box {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 24px;
+  margin-top: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.chart-wrap {
+  position: relative;
+  height: 270px;
+  width: 100%;
+}
+
+/* Responsiveness */
+@media (max-width: 960px) {
+  body { grid-template-columns: 1fr; }
+  aside {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--navy-line);
+    padding: 28px 24px;
+  }
+  main { padding: 36px 20px 48px; }
+  .gauge { padding: 24px 20px 20px; }
+}
+</style>
+</head>
+<body>
+
+<aside>
+  <div class="brand">Discounted Cash Flow</div>
+  <div class="brand-sub">Intrinsic Valuation Engine</div>
+
+  <form id="dcf-form">
+    <div class="field">
+      <label for="ticker">Company Ticker</label>
+      <input type="text" id="ticker" name="ticker" value="NVDA" placeholder="NVDA" autocomplete="off" required>
+      <div class="chips">
+        <button type="button" onclick="setTicker('NVDA')">NVDA</button>
+        <button type="button" onclick="setTicker('AAPL')">AAPL</button>
+        <button type="button" onclick="setTicker('MSFT')">MSFT</button>
+        <button type="button" onclick="setTicker('GOOGL')">GOOGL</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="horizon">Forecast Horizon <output id="horizon-val">5 years</output></label>
+      <input type="range" id="horizon" name="horizon" min="1" max="10" value="5"
+        oninput="document.getElementById('horizon-val').textContent = this.value + (this.value == 1 ? ' year' : ' years')">
+      <div class="scale"><span>1 Yr</span><span>5 Yrs</span><span>10 Yrs</span></div>
+    </div>
+
+    <div class="field">
+      <label for="growth">Terminal Growth Rate (g) <output id="growth-val">2.5%</output></label>
+      <input type="range" id="growth" name="growth" min="0.01" max="0.05" step="0.001" value="0.025"
+        oninput="document.getElementById('growth-val').textContent = (this.value * 100).toFixed(1) + '%'">
+      <div class="scale"><span>1.0%</span><span>2.5% (GDP norm)</span><span>5.0%</span></div>
+    </div>
+
+    <details>
+      <summary>Model Overrides</summary>
+      <div class="overrides">
+        <div>
+          <label for="exit_multiple">Exit Multiple (EV / EBITDA)</label>
+          <input type="number" step="0.1" id="exit_multiple" name="exit_multiple" placeholder="Default: Gordon growth">
+        </div>
+        <div>
+          <label for="risk_free">Risk-Free Rate (e.g. 0.042 for 4.2%)</label>
+          <input type="number" step="0.001" id="risk_free" name="risk_free" placeholder="Default: 10Y Sovereign Yield">
+        </div>
+        <div>
+          <label for="erp">Equity Risk Premium (e.g. 0.045 for 4.5%)</label>
+          <input type="number" step="0.001" id="erp" name="erp" placeholder="Default: Damodaran Country ERP">
+        </div>
+      </div>
+    </details>
+
+    <button type="submit" id="submit-btn" class="run">
+      <span id="btn-text">Execute Valuation</span>
+      <span id="btn-spinner" class="spin" hidden></span>
+    </button>
+  </form>
+</aside>
+
+<main>
+  <div id="error-card" hidden role="alert">
+    <strong>Valuation Error</strong>
+    <span id="error-msg"></span>
+  </div>
+
+  <section id="empty-state">
+    <h2>Intrinsic Valuation Model</h2>
+    <p>Select a corporate ticker, configure the explicit forecast period and perpetual growth assumptions, and execute the model to calculate intrinsic enterprise and equity values.</p>
+  </section>
+
+  <section id="results-view" hidden>
+    <div class="headline-wrap">
+      <h1 class="headline" id="res-headline"></h1>
+    </div>
+    <p class="byline" id="res-byline"></p>
+
+    <div class="gauge">
+      <div class="gauge-header">
+        <span class="gauge-title">Market Quote vs. Implied Value per Share</span>
+      </div>
+
+      <div class="track-container">
+        <div class="track" id="gauge-track">
+          <div class="span" id="gauge-span"></div>
+          <div class="mark top" id="mark-price">
+            <span class="v" id="res-current-price">$0.00</span>
+            <span class="k">Market Price</span>
+          </div>
+          <div class="mark bottom" id="mark-value">
+            <span class="k">Implied DCF</span>
+            <span class="v" id="res-implied-price">$0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gauge-meta">
+        <span>Discount Rate (WACC): <b id="res-wacc">0.00%</b></span>
+        <span>Spread: <b id="res-spread">0.00%</b></span>
+        <span class="verdict-badge" id="res-badge"></span>
+      </div>
+    </div>
+
+    <h3>Enterprise to Equity Value Bridge</h3>
+    <p class="note">Sum of discounted explicit cash flows and perpetual terminal value, less net corporate obligations.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <td>PV of Explicit Forecast Cash Flows</td>
+          <td id="res-pv-fcff">$0.00</td>
+        </tr>
+        <tr>
+          <td>PV of Terminal Value</td>
+          <td id="res-pv-tv">$0.00</td>
+        </tr>
+        <tr class="sub">
+          <td>Enterprise Value (EV)</td>
+          <td id="res-ev">$0.00</td>
+        </tr>
+        <tr>
+          <td>Less: Net Debt <small>(Negative indicates Net Cash)</small></td>
+          <td id="res-netdebt">$0.00</td>
+        </tr>
+        <tr class="total">
+          <td>Implied Equity Value</td>
+          <td id="res-equity">$0.00</td>
+        </tr>
+      </table>
+
+      <div class="tvbar" aria-hidden="true">
+        <i class="a" id="bar-fcff"></i>
+        <i class="b" id="bar-tv"></i>
+      </div>
+      <div class="legend">
+        <span class="a">Explicit Forecast: <b id="lg-fcff"></b></span>
+        <span class="b">Terminal Perpetuity: <b id="lg-tv"></b></span>
+      </div>
+    </div>
+
+    <h3>Projected Free Cash Flow Schedule</h3>
+    <p class="note">Unlevered Free Cash Flows to Firm (FCFF) across the projection horizon.</p>
+    
+    <div class="chart-box">
+      <div class="chart-wrap">
+        <canvas id="fcff-chart" role="img" aria-label="Bar chart of projected free cash flow by year"></canvas>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+let cashFlowChartInstance = null;
+
+function setTicker(symbol) {
+  document.getElementById('ticker').value = symbol;
+}
+
+function formatMoney(amount) {
+  if (amount === undefined || amount === null || isNaN(amount)) return "$0.00";
+  const sign = amount < 0 ? "−" : "";
+  const abs = Math.abs(amount);
+  if (abs >= 1e12) return `${sign}$${(abs / 1e12).toFixed(2)} T`;
+  if (abs >= 1e9) return `${sign}$${(abs / 1e9).toFixed(2)} B`;
+  if (abs >= 1e6) return `${sign}$${(abs / 1e6).toFixed(2)} M`;
+  return `${sign}$${abs.toFixed(2)}`;
+}
+
+const $ = id => document.getElementById(id);
+
+document.getElementById('dcf-form').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const tickerVal = $('ticker').value.trim().toUpperCase();
+  const num = id => {
+    const v = $(id).value;
+    return v ? parseFloat(v) : null;
+  };
+
+  const payload = {
+    ticker: tickerVal,
+    horizon: parseInt($('horizon').value, 10),
+    growth: parseFloat($('growth').value),
+    exit_multiple: num('exit_multiple'),
+    risk_free: num('risk_free'),
+    erp: num('erp')
+  };
+
+  $('error-card').hidden = true;
+  $('btn-text').textContent = `Valuing ${tickerVal}…`;
+  $('btn-spinner').hidden = false;
+  $('submit-btn').disabled = true;
+
+  try {
+    const response = await fetch('/api/v1/valuation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      const d = data.detail;
+      throw new Error(typeof d === 'string' ? d : (d ? JSON.stringify(d) : `Server returned status ${response.status}`));
+    }
+
+    renderResults(tickerVal, payload, data);
+    $('empty-state').hidden = true;
+    $('results-view').hidden = false;
+    renderChart(data.projected_fcff);
+
+  } catch (err) {
+    $('error-msg').textContent = err.message || "An unexpected error occurred.";
+    $('error-card').hidden = false;
+  } finally {
+    $('btn-text').textContent = "Execute Valuation";
+    $('btn-spinner').hidden = true;
+    $('submit-btn').disabled = false;
+  }
+});
+
+function renderResults(ticker, payload, data) {
+  const up = data.upside_downside_pct >= 0;
+  const pct = Math.abs(data.upside_downside_pct * 100).toFixed(1);
+  const cls = up ? 'up' : 'down';
+
+  $('res-headline').innerHTML =
+    `${ticker}’s DCF value is <span class="pct ${cls}">${pct}% ${up ? 'above' : 'below'}</span> market price`;
+  $('res-byline').textContent =
+    `Based on a ${payload.horizon}-year forecast and ${(payload.growth * 100).toFixed(1)}% terminal growth rate.`;
+
+  $('res-current-price').textContent = `$${data.current_price.toFixed(2)}`;
+  $('res-implied-price').textContent = `$${data.implied_share_price.toFixed(2)}`;
+  
+  $('res-spread').textContent = `${up ? '+' : '−'}${pct}%`;
+  
+  const badge = $('res-badge');
+  badge.textContent = up ? 'UNDERVALUED' : 'OVERVALUED';
+  badge.className = `verdict-badge ${cls}`;
+
+  $('res-wacc').textContent = `${(data.wacc * 100).toFixed(2)}%`;
+
+  // Scale calculations for the gauge
+  const p = data.current_price;
+  const v = data.implied_share_price;
+  const lo = Math.min(p, v);
+  const hi = Math.max(p, v);
+
+  // Add breathing room on sides so marks don't push outside the track
+  const diff = Math.max(hi - lo, 1.0);
+  const pad = Math.max(diff * 0.45, hi * 0.12);
+  const min = Math.max(0, lo - pad);
+  const max = hi + pad;
+
+  // Clamped pos between 8% and 92% prevents edge text overlap
+  const pos = val => Math.min(92, Math.max(8, ((val - min) / (max - min)) * 100));
+
+  const pPos = pos(p);
+  const vPos = pos(v);
+
+  $('mark-price').style.left = pPos + '%';
+  $('mark-value').style.left = vPos + '%';
+
+  const span = $('gauge-span');
+  span.className = 'span ' + cls;
+  span.style.left = Math.min(pPos, vPos) + '%';
+  span.style.width = Math.abs(vPos - pPos) + '%';
+
+  // Enterprise to Equity Bridge Table
+  const netDebt = data.enterprise_value - data.equity_value;
+  $('res-pv-fcff').textContent = formatMoney(data.pv_fcff);
+  $('res-pv-tv').textContent = formatMoney(data.pv_terminal_value);
+  $('res-ev').textContent = formatMoney(data.enterprise_value);
+  $('res-netdebt').textContent = formatMoney(netDebt);
+  $('res-equity').textContent = formatMoney(data.equity_value);
+
+  // Terminal Value Ratio Bar
+  const total = data.pv_fcff + data.pv_terminal_value;
+  const tvShare = total > 0 ? (data.pv_terminal_value / total) * 100 : 0;
+  $('bar-tv').style.width = tvShare + '%';
+  $('bar-fcff').style.width = (100 - tvShare) + '%';
+  $('lg-fcff').textContent = `${(100 - tvShare).toFixed(1)}%`;
+  $('lg-tv').textContent = `${tvShare.toFixed(1)}%`;
+}
+
+function renderChart(fcffList) {
+  const ctx = $('fcff-chart').getContext('2d');
+  if (cashFlowChartInstance) cashFlowChartInstance.destroy();
+
+  const css = getComputedStyle(document.documentElement);
+  const ink = css.getPropertyValue('--ink-soft').trim();
+  const rule = css.getPropertyValue('--rule-light').trim();
+  const navy = css.getPropertyValue('--navy').trim();
+  const brass = css.getPropertyValue('--brass').trim();
+  const font = { family: '"IBM Plex Sans", sans-serif', size: 12, weight: 500 };
+
+  cashFlowChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: fcffList.map((_, i) => `Year ${i + 1}`),
+      datasets: [{
+        label: 'Projected FCFF',
+        data: fcffList.map(v => v / 1e9),
+        backgroundColor: navy,
+        hoverBackgroundColor: brass,
+        borderRadius: 4,
+        maxBarThickness: 52
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0e1e38',
+          titleFont: { family: '"IBM Plex Sans", sans-serif', size: 13, weight: 'bold' },
+          bodyFont: { family: '"IBM Plex Sans", sans-serif', size: 12 },
+          padding: 10,
+          cornerRadius: 4,
+          callbacks: {
+            label: c => ` Projected FCFF: $${c.raw.toFixed(2)} Billion`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: ink, font }
+        },
+        y: {
+          grid: { color: rule },
+          border: { display: false },
+          ticks: {
+            color: ink,
+            font,
+            callback: v => `$${v}B`
+          }
+        }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
