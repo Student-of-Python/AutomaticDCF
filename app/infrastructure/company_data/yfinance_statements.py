@@ -23,7 +23,16 @@ class YFinanceStatementsAdapter(StatementAdapter):
         balance = _ticker.balance_sheet.T
         cash = _ticker.cash_flow.T
 
-        return income, balance, cash
+        common = (
+            income.index
+            .intersection(balance.index)
+            .intersection(cash.index)
+        )
+
+        if common.empty:
+            raise ValueError(f"No overlapping financial statement dates found for '{ticker}'.")
+
+        return income.loc[common], balance.loc[common], cash.loc[common]
 
     @property
     def _income_mapping(self) -> dict[str, str]:

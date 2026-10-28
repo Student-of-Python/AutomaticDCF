@@ -21,9 +21,23 @@ class FinancialStatements:
     cash: DataFrame
 
     @property
+    def latest_revenue(self) -> float:
+        '''Returns latest revenue'''
+        return self.income[IncomeStatementCols.REVENUE].iat[0]
+
+    @property
+    def latest_nwc(self) -> float:
+        '''Returns latest nwc'''
+        return self.balance[BalanceSheetCols.TOTAL_CURRENT_ASSETS].iat[0] - self.balance[BalanceSheetCols.TOTAL_CURRENT_LIABILITIES].iat[0]
+
+    @property
     def latest_total_debt(self) -> float:
         '''Returns most recent total debt. Assumes ordering is recent to oldest.'''
         return self.balance[BalanceSheetCols.TOTAL_DEBT].iat[0]
+
+    @property
+    def latest_total_equity(self) -> float:
+        return self.balance[BalanceSheetCols.TOTAL_EQUITY].iat[0]
 
     @property
     def latest_interest_expense(self) -> float:
@@ -80,8 +94,8 @@ class MacroVariables:
     Macro Economic Variables
     '''
 
-    yield_rate: float
-    equity_premium: float
+    risk_free_rate: float
+    equity_premium_rate: float
 
 
 @dataclass(frozen=True)

@@ -14,7 +14,7 @@ class HistoricalDriverAnalyzer:
         rev = statements.income[IncomeStatementCols.REVENUE]
 
         return HistoricalDriver(
-            revenue_growth= rev.pct_change().dropna().to_numpy(),
+            revenue_growth= rev.iloc[::-1].pct_change().dropna().to_numpy(),
             ebit_margin = (statements.income[IncomeStatementCols.EBIT] / rev).to_numpy(),
             capex_ratio = (statements.cash[CashStatementCols.CAPEX].abs() / rev).to_numpy(),
             da_ratio = (statements.cash[CashStatementCols.DEPRECIATION] / rev).to_numpy(),

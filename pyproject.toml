@@ -1,0 +1,26 @@
+    [build-system]
+    requires = ["setuptools>=61.0"]
+    build-backend = "setuptools.build_meta"
+
+    [project]
+    name = "dcf-model"
+    version = "0.1.0"
+    description = "Automated Discounted Cash Flow (DCF) Valuation Engine"
+    readme = "README.md"
+    requires-python = ">=3.11"
+    dependencies = [
+        "yfinance",
+        "pandas",
+        "numpy",
+        "requests",
+        "typer",
+        "rich",
+    ]
+
+    [project.scripts]
+    dcf = "app.external.cli.main:app"
+
+    [tool.setuptools.packages.find]
+    where = ["."]
+    include = ["app*"]
+    exclude = ["img*", "test*"]

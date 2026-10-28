@@ -6,9 +6,9 @@ from app.domain.services.forecasting.forecaster import CashFlowForecaster
 from app.domain.services.forecasting.analyzer import HistoricalDriverAnalyzer
 from app.domain.services.wacc import WaccCalculator
 from app.domain.services.forecasting.forecaster import StrategyConfig #I need to change this import
-from app.interface import StatementAdapter, MacroAdapter, ProfileAdapter
+from app.application.ports import StatementAdapter, MacroAdapter, ProfileAdapter
 from .dto import CalculateDCFRequest, CalculateDCFResponse
-from app.domain.exceptions import ErrorCode, Error
+from app.domain.exceptions import Error
 from app.domain.entities import Result
 from dataclasses import dataclass
 
@@ -83,7 +83,19 @@ class CalculateDCFUseCase:
             equity_value = val.equity_value,
             pv_fcff = val.pv_fcff,
             pv_terminal_value = val.pv_terminal_value,
-            schedule = future_projections
+            schedule = future_projections,
+            shares_outstanding = profile.value.shares_outstanding,
+            cash = statements.value.latest_cash_and_equivalents,
+            total_debt = statements.value.latest_total_debt,
+            cost_of_equity = wacc_calcs.cost_of_equity,
+            cost_of_debt = wacc_calcs.post_tax_cost_of_debt,
+            tax_rate = statements.value.effective_tax_rate(),
+            risk_free_rate = risk_free_rate,
+            equity_risk_premium = equity_premium_rate,
+            beta = profile.value.beta,
+            terminal_growth_rate = request.terminal_growth_rate,
+            exit_multiple = exit_multiple,
+            historical_statements = statements.value
         ))
 
 

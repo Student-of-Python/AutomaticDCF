@@ -4,11 +4,13 @@ app/infrastructure/macro_data/composite.py
 from app.application.ports.variables_interface import MacroAdapter, EquityPremiumProvider, RiskFreeProvider, RiskFree, \
     EquityPremium
 
+
+
 from .erp_provider import DamodaranERPProvider
 from .yield_provider import TradingEconomicsYieldProvider
 
 class CompositeMacroAdapter(MacroAdapter):
-    def __init__(self, yield_provider: RiskFreeProvider | None, equity_provider: EquityPremiumProvider | None):
+    def __init__(self, yield_provider: RiskFreeProvider | None = None, equity_provider: EquityPremiumProvider | None = None):
         self._yield_provider = yield_provider or TradingEconomicsYieldProvider()
         self._equity_provider = equity_provider or DamodaranERPProvider()
 

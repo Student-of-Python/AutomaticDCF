@@ -32,3 +32,7 @@ class Error:
 
 class InvalidDataTypeError(Exception):
     pass
+
+
+class EmptyDataSeriesError(Exception):
+    pass

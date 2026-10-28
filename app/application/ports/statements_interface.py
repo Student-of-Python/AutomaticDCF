@@ -56,14 +56,22 @@ class StatementAdapter(ABC):
 
             r_income, r_balance, r_cash = self._fetch_raw_statements(ticker = ticker)
 
-            balance = self._convert(r_balance, self._balance_mapping)
+            income = self._convert(r_income, self._income_mapping).dropna(how='all')
+            balance = self._convert(r_balance, self._balance_mapping).dropna(how='all')
+            cash = self._convert(r_cash, self._cash_mapping).dropna(how='all')
+
+            common = income.index.intersection(balance.index).intersection(cash.index)
+            if common.empty:
+                raise ValueError(f"No overlapping financial statement dates found for '{ticker}'.")
+
+            income = income.loc[common].fillna(0.0)
+            balance = balance.loc[common].fillna(0.0)
+            cash = cash.loc[common].fillna(0.0)
+
             self._validate(balance, BalanceSheetCols.values_as_tuple())
-
-            cash = self._convert(r_cash, self._cash_mapping)
             self._validate(cash, CashStatementCols.values_as_tuple())
-
-            income = self._convert(r_income, self._income_mapping)
             self._validate(income, IncomeStatementCols.values_as_tuple())
+
 
         except (ConnectionError, TimeoutError) as err:
             return Result.failed(error = Error(

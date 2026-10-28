@@ -14,7 +14,6 @@ class DamodaranERPProvider:
         "south korea": "korea",
     }
 
-
     def __init__(self, csv_path: Path | str | None = None,  cutoff: float = 0.75): #Is this the right way to handle this?
         _path = Path(csv_path) if csv_path else Path(__file__).resolve().parent / "data" / "damodaran_erp_2025.csv"
         _data = pd.read_csv(_path, index_col = 'Country')
