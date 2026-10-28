@@ -2,7 +2,7 @@
 test/unit/test_convert.py
 '''
 
-from app.infrastructure.api.interface import StatementAdapter
+from app.application.ports.statements_interface import StatementAdapter
 import pandas as pd
 import pytest
 

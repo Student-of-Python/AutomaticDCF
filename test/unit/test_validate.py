@@ -1,5 +1,3 @@
-from app.infrastructure.api.interface import StatementAdapter
-from app.domain.entities import InvalidDataTypeError
 import pandas as pd
 import pytest
 
