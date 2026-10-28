@@ -1,3 +1,10 @@
+
+# Website:
+
+https://automaticdcf.onrender.com/
+
+* May take a few seconds to load. 
+
 # Design 
 Overall Goal:
   Make a DCF calculator that outputs a valuation of a company. The input fields come from the website portal, and the output will be displayed as an excel file. 
