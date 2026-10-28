@@ -9,6 +9,7 @@ from app.infrastructure.macro_data.composite import CompositeMacroAdapter
 from app.application.dto import CalculateDCFRequest
 from app.application.use_case import CalculateDCFUseCase
 from app.external.cli.strategy_build import configure_strategies
+from app.external.cli.presentation import render_valuation, render_error
 import typer
 from rich.console import Console
 
@@ -51,13 +52,11 @@ def dcf(
     with console.status(f"[bold cyan]Fetching market data and valuing {ticker.upper()}..."):
         result = use_case.execute(request)
 
-
     if result.is_success:
-        console.print(f"[bold green]Successfully valued {ticker.upper()}![/bold green]")
-        console.print(f"Implied Price: ${result.value.implied_share_price:,.2f}")
-        # (Later we will call render_report(result.value))
+        render_valuation(result.value, console=console)
     else:
-        console.print(f"[bold red]Valuation Failed:[/bold red] {result.error.msg}")
+        render_error(result.error, verbose=verbose, console=console)
         raise typer.Exit(code=1)
+
 
 

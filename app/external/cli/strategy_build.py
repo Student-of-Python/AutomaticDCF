@@ -42,8 +42,8 @@ def prompt_strategy_for(metric_name: str, default_target_rate: float | None = No
 
 def configure_strategies(terminal_growth_rate: float) -> StrategyConfig:
     ''''''
-    console.print(f"  [bold]\\[1][/bold] Quick Default (Historical Average for all metrics")
-    console.print(f"  [bold]\\[2][/bold] Custom (Configure each metric")
+    console.print(f"  [bold]\\[1][/bold] Quick Default (Historical Average for all metrics)")
+    console.print(f"  [bold]\\[2][/bold] Custom (Configure each metric)")
 
     choice = Prompt.ask(
         f"Select Choice",
