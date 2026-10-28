@@ -3,6 +3,7 @@ app\infrastructure\api\yfinance_data.py
 '''
 from app.domain.enums import IncomeStatementCols, CashStatementCols, BalanceSheetCols
 from app.application.ports.statements_interface import StatementAdapter, Income, Balance, Cash
+from .session import get_yfinance_session
 import yfinance as yf
 
 
@@ -17,7 +18,7 @@ class YFinanceStatementsAdapter(StatementAdapter):
 
     def _fetch_raw_statements(self, ticker: str) -> tuple[Income, Balance, Cash]:
         ''''''
-        _ticker = yf.Ticker(ticker = ticker)
+        _ticker = yf.Ticker(ticker = ticker, session = get_yfinance_session())
 
         income = _ticker.income_stmt.T
         balance = _ticker.balance_sheet.T
