@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DCF Engine | Institutional Corporate Valuation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/editorial.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="site-brand">
+    <span>DCF Engine</span>
+    <span class="site-brand-tag">A Gleb Sokhin Project</span>
+  </a>
+  <nav class="nav-links">
+    <a href="/" class="nav-link active">Home</a>
+    <a href="/valuation" class="nav-link">Valuation Terminal</a>
+    <a href="/theory" class="nav-link">Methodology</a>
+    <a href="/valuation" class="nav-cta">Launch model</a>
+  </nav>
+</header>
+
+<div class="page-container">
+
+  <section class="hero">
+    <div>
+      <span class="hero-tag rise" style="--i:0">Automated corporate finance</span>
+      <h1 class="rise" style="--i:1">Discounted Cash Flow Model</h1>
+      <p class="hero-lead rise" style="--i:2">
+        Automated DCF model valuation built on Domain-Driven Design philosophy. This project is for educational purpose only.
+      </p>
+      <div class="hero-actions rise" style="--i:3">
+        <a href="/valuation" class="btn-primary">Launch valuation terminal</a>
+        <a href="/theory" class="btn-secondary">Explore methodology</a>
+      </div>
+    </div>
+
+    <!-- Illustrative sample of the terminal's price-vs-value gauge -->
+    <div class="specimen rise" style="--i:4" id="specimen" aria-hidden="true">
+      <div class="specimen-title"><span>Market price vs. DCF value per share</span><span>Illustrative</span></div>
+      <div class="spec-track">
+        <div class="spec-span"></div>
+        <div class="spec-mark t"><b>$100.00</b><i>Market price</i></div>
+        <div class="spec-mark b"><i>Implied DCF</i><b>$118.00</b></div>
+      </div>
+      <div class="spec-formula">FCFF = EBIT(1 − t) + D&amp;A − CapEx − ΔNWC</div>
+    </div>
+  </section>
+
+  <div class="try rise" style="--i:5">
+    <span class="try-label">Try a ticker</span>
+    <a class="chip" href="/valuation?ticker=NVDA">NVDA</a>
+    <a class="chip" href="/valuation?ticker=AAPL">AAPL</a>
+    <a class="chip" href="/valuation?ticker=MSFT">MSFT</a>
+    <a class="chip" href="/valuation?ticker=GOOGL">GOOGL</a>
+    <a class="chip" href="/valuation?ticker=WMT">WMT</a>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h3>Clean architecture core</h3>
+      <p>Pure DDD philosophy, adding for robust underlying architecture.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Live macroeconomic feed</h3>
+      <p>Data pipeline from financial statements, live macroeconomic variables, and localized datasets. </p>
+    </div>
+    <div class="feature-card">
+      <h3>Multi-driver forecasting</h3>
+      <p>Strategy implementation for customized valuations and analysis. </p>
+    </div>
+    <div class="feature-card">
+      <h3>Valuation bridge &amp; terminal value</h3>
+      <p>Automated DCF to calculate implied value per share simultaneously.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Multi-sheet Excel exporter</h3>
+      <p>Instant download of structured, audit-ready financial models (.xlsx) containing historical statements, FCFF schedules, and WACC derivations.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Dynamic terminal visualizer</h3>
+      <p>Interactive price-to-value spreads, live sensitivity gauges, and animated cash flow projections rendered in real time.</p>
+    </div>
+  </div>
+
+  <div class="callout band">
+    <h4>Mathematical transparency</h4>
+    <p> I will discuss the methodology behind the model in the <a href="/theory">methodology paper</a>.</p>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-author">
+    <span>DCF Engine · Developed by Gleb Sokhin</span>
+  </div>
+  <div class="footer-links">
+    <a href="https://glebquant.netlify.app/" target="_blank" rel="noopener noreferrer" class="social-link">
+      <svg class="social-svg" style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+      <span>Website</span>
+    </a>
+    <a href="https://github.com/Student-of-Python" target="_blank" rel="noopener noreferrer" class="social-link">
+      <img src="/img/logos/githublogo.png" alt="GitHub" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+      <svg class="social-svg" style="display:none;width:18px;height:18px;vertical-align:middle;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      <span>GitHub</span>
+    </a>
+    <a href="https://www.linkedin.com/in/gleb-sokhin/" target="_blank" rel="noopener noreferrer" class="social-link">
+      <img src="/img/logos/linkedinlogo.png" alt="LinkedIn" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+      <svg class="social-svg" style="display:none;width:18px;height:18px;vertical-align:middle;" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+      <span>LinkedIn</span>
+    </a>
+  </div>
+</footer>
+
+<script>
+  // Start the sample gauge's slide once the page has painted
+  requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById('specimen').classList.add('go')));
+</script>
+</body>
+</html>

@@ -7,539 +7,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<style>
-:root {
-  --ink: #12233f;
-  --ink-soft: #3b4a63;
-  --muted: #6b778a;
-  --paper: #f7f8fa;
-  --sheet: #ffffff;
-  --rule: #dde1e8;
-  --rule-light: #edf0f5;
-  --navy: #0e1e38;
-  --navy-line: #223554;
-  --on-navy: #dbe3f0;
-  --on-navy-muted: #8b9db8;
-  --brass: #b08d3c;
-  --brass-hover: #c49e48;
-  --gain: #137752;
-  --gain-bg: #eaf6f0;
-  --loss: #ad3428;
-  --loss-bg: #fdf0ee;
-  --serif: "Newsreader", Georgia, "Times New Roman", serif;
-  --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { min-height: 100%; }
-body {
-  font-family: var(--sans);
-  background: var(--paper);
-  color: var(--ink);
-  line-height: 1.5;
-  display: grid;
-  grid-template-columns: 350px 1fr;
-  min-height: 100vh;
-  font-variant-numeric: tabular-nums;
-  -webkit-font-smoothing: antialiased;
-}
-
-:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
-
-/* ---------- Assumptions rail (Left Column) ---------- */
-aside {
-  background: var(--navy);
-  color: var(--on-navy);
-  padding: 36px 30px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-  border-right: 1px solid var(--navy-line);
-  display: flex;
-  flex-direction: column;
-}
-
-.brand {
-  font-family: var(--serif);
-  font-size: 26px;
-  font-weight: 500;
-  color: #ffffff;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-}
-
-.brand-sub {
-  font-size: 13px;
-  color: var(--on-navy-muted);
-  margin-top: 6px;
-  line-height: 1.4;
-}
-
-form {
-  margin-top: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 26px;
-  flex: 1;
-}
-
-.field { display: flex; flex-direction: column; }
-.field label, .field .lab {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--on-navy-muted);
-  margin-bottom: 8px;
-}
-
-.field output {
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-}
-
-input[type=text], input[type=number] {
-  width: 100%;
-  font: inherit;
-  color: #ffffff;
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid var(--navy-line);
-  padding: 8px 0;
-  border-radius: 0;
-  transition: border-color 0.2s;
-}
-
-input::placeholder { color: #4e6282; font-size: 13px; }
-
-input[type=text]#ticker {
-  font-family: var(--serif);
-  font-size: 32px;
-  font-weight: 500;
-  letter-spacing: .03em;
-  text-transform: uppercase;
-  padding: 4px 0 8px;
-}
-
-input[type=text]:focus, input[type=number]:focus {
-  outline: none;
-  border-bottom-color: var(--brass);
-}
-
-.chips { display: flex; gap: 8px; margin-top: 10px; }
-.chips button {
-  font: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--on-navy);
-  background: transparent;
-  border: 1px solid var(--navy-line);
-  border-radius: 3px;
-  padding: 3px 9px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.chips button:hover {
-  border-color: var(--brass);
-  color: #ffffff;
-  background: rgba(176, 141, 60, 0.1);
-}
-
-input[type=range] {
-  width: 100%;
-  accent-color: var(--brass);
-  cursor: pointer;
-  margin-top: 4px;
-}
-
-.scale {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: #5c7091;
-  margin-top: 4px;
-}
-
-details {
-  border-top: 1px solid var(--navy-line);
-  padding-top: 16px;
-}
-
-summary {
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--on-navy);
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-summary::-webkit-details-marker { display: none; }
-summary::after { content: "+"; color: var(--brass); font-size: 16px; font-weight: bold; line-height: 1; }
-details[open] summary::after { content: "–"; }
-
-.overrides { display: grid; gap: 16px; margin-top: 14px; }
-.overrides label { font-size: 12px; color: var(--on-navy-muted); display: block; margin-bottom: 2px; }
-.overrides input { font-size: 13px; }
-
-button.run {
-  font: inherit;
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  background: var(--brass);
-  color: #0e1e38;
-  border: 0;
-  border-radius: 4px;
-  padding: 13px 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  transition: background 0.2s;
-  margin-top: auto;
-}
-
-button.run:hover { background: var(--brass-hover); }
-button.run:disabled { opacity: .7; cursor: progress; }
-
-.spin {
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(14, 30, 56, 0.3);
-  border-top-color: #0e1e38;
-  border-radius: 50%;
-  animation: sp .7s linear infinite;
-}
-.spin[hidden] { display: none; }
-@keyframes sp { to { transform: rotate(360deg); } }
-
-/* ---------- Main report Area (Right Column) ---------- */
-main {
-  padding: 48px clamp(32px, 5vw, 80px) 72px;
-  max-width: 1040px;
-  width: 100%;
-}
-
-#error-card {
-  border-left: 3px solid var(--loss);
-  background: var(--loss-bg);
-  color: var(--loss);
-  padding: 14px 18px;
-  font-size: 14px;
-  border-radius: 0 4px 4px 0;
-  margin-bottom: 32px;
-}
-#error-card[hidden], #empty-state[hidden], #results-view[hidden] { display: none; }
-#error-card strong { display: block; margin-bottom: 3px; font-weight: 600; }
-
-#empty-state { padding-top: 10vh; max-width: 520px; }
-#empty-state h2 {
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: 38px;
-  line-height: 1.15;
-  color: var(--navy);
-}
-#empty-state p {
-  color: var(--ink-soft);
-  margin-top: 16px;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-/* Header & Verdict */
-.headline-wrap { margin-bottom: 8px; }
-.headline {
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: clamp(28px, 3.8vw, 40px);
-  line-height: 1.25;
-  color: var(--navy);
-  word-break: normal;
-  overflow-wrap: break-word;
-}
-.headline .pct.up { color: var(--gain); font-style: italic; }
-.headline .pct.down { color: var(--loss); font-style: italic; }
-
-.byline {
-  color: var(--muted);
-  font-size: 14px;
-  margin-top: 8px;
-  margin-bottom: 36px;
-}
-
-/* Price vs Value Gauge */
-.gauge {
-  background: var(--sheet);
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  padding: 36px 36px 28px;
-  margin: 32px 0 44px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-}
-
-.gauge-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.gauge-title {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.track-container {
-  position: relative;
-  padding: 56px 12px 48px;
-}
-
-.track {
-  position: relative;
-  height: 6px;
-  background: var(--rule-light);
-  border-radius: 3px;
-}
-
-.span {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-.span.up { background: var(--gain); }
-.span.down { background: var(--loss); }
-
-.mark {
-  position: absolute;
-  top: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.mark::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  width: 2px;
-  background: var(--navy);
-  transform: translateX(-50%);
-}
-
-.mark .v {
-  font-family: var(--serif);
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1;
-  color: var(--navy);
-}
-
-.mark .k {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.mark.top { margin-top: -54px; }
-.mark.top::before { top: 100%; height: 20px; margin-top: 4px; }
-
-.mark.bottom { margin-top: 18px; }
-.mark.bottom::before { bottom: 100%; height: 20px; margin-bottom: 4px; }
-
-.mark .v, .mark .k { display: block; }
-.mark.top .k { margin-top: 4px; }
-.mark.bottom .k { margin-bottom: 4px; }
-
-.gauge-meta {
-  display: flex;
-  gap: 20px 32px;
-  font-size: 13px;
-  color: var(--ink-soft);
-  flex-wrap: wrap;
-  align-items: center;
-  border-top: 1px solid var(--rule-light);
-  padding-top: 18px;
-  margin-top: 12px;
-}
-
-.gauge-meta b {
-  color: var(--navy);
-  font-weight: 600;
-}
-
-.verdict-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  border-radius: 3px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.verdict-badge.up { background: var(--gain-bg); color: var(--gain); border: 1px solid rgba(19, 119, 82, 0.2); }
-.verdict-badge.down { background: var(--loss-bg); color: var(--loss); border: 1px solid rgba(173, 52, 40, 0.2); }
-
-/* Bridge table */
-h3 {
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: 22px;
-  color: var(--navy);
-  margin: 44px 0 6px;
-  letter-spacing: -0.01em;
-}
-
-.note {
-  color: var(--muted);
-  font-size: 13px;
-  margin-bottom: 16px;
-  line-height: 1.4;
-}
-
-.table-wrap {
-  background: var(--sheet);
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  padding: 12px 24px 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-td {
-  padding: 13px 0;
-  border-bottom: 1px solid var(--rule-light);
-}
-
-td:first-child {
-  color: var(--ink-soft);
-}
-
-td:last-child {
-  text-align: right;
-  font-weight: 600;
-  color: var(--navy);
-  white-space: nowrap;
-  padding-left: 16px;
-}
-
-tr.sub td {
-  border-bottom: 1px solid var(--rule);
-  font-weight: 600;
-  color: var(--navy);
-}
-
-tr.total td {
-  font-family: var(--serif);
-  font-size: 18px;
-  font-weight: 600;
-  border-bottom: 0;
-  padding-top: 16px;
-  padding-bottom: 8px;
-  color: var(--navy);
-}
-
-td small {
-  color: var(--muted);
-  font-weight: 400;
-  margin-left: 6px;
-  font-size: 12px;
-}
-
-.tvbar {
-  display: flex;
-  height: 8px;
-  margin-top: 18px;
-  border-radius: 2px;
-  overflow: hidden;
-  background: var(--rule-light);
-}
-
-.tvbar i { display: block; height: 100%; transition: width 0.3s ease; }
-.tvbar .a { background: var(--navy); }
-.tvbar .b { background: var(--brass); }
-
-.legend {
-  display: flex;
-  gap: 24px;
-  font-size: 12px;
-  color: var(--ink-soft);
-  margin-top: 10px;
-}
-
-.legend span::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 6px;
-  border-radius: 1px;
-}
-
-.legend .a::before { background: var(--navy); }
-.legend .b::before { background: var(--brass); }
-
-.chart-box {
-  background: var(--sheet);
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  padding: 24px;
-  margin-top: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-}
-
-.chart-wrap {
-  position: relative;
-  height: 270px;
-  width: 100%;
-}
-
-/* Responsiveness */
-@media (max-width: 960px) {
-  body { grid-template-columns: 1fr; }
-  aside {
-    position: static;
-    height: auto;
-    border-right: 0;
-    border-bottom: 1px solid var(--navy-line);
-    padding: 28px 24px;
-  }
-  main { padding: 36px 20px 48px; }
-  .gauge { padding: 24px 20px 20px; }
-}
-</style>
 </head>
-<body>
+<body class="app-layout">
+<div class="loadbar" aria-hidden="true"></div>
 
 <aside>
   <div class="brand">Discounted Cash Flow</div>
   <div class="brand-sub">Intrinsic Valuation Engine</div>
+  <nav style="display: flex; gap: 12px; margin-top: 10px; font-size: 11px;">
+    <a href="/" style="color: var(--on-navy-muted); text-decoration: none; font-weight: 500;">← Home</a>
+    <span style="color: var(--navy-line);">|</span>
+    <a href="/theory" style="color: var(--brass); text-decoration: none; font-weight: 500;">Methodology →</a>
+  </nav>
 
   <form id="dcf-form">
     <div class="field">
@@ -556,19 +37,70 @@ td small {
     <div class="field">
       <label for="horizon">Forecast Horizon <output id="horizon-val">5 years</output></label>
       <input type="range" id="horizon" name="horizon" min="1" max="10" value="5"
-        oninput="document.getElementById('horizon-val').textContent = this.value + (this.value == 1 ? ' year' : ' years')">
+        oninput="setOut('horizon-val', this.value + (this.value == 1 ? ' year' : ' years'))">
       <div class="scale"><span>1 Yr</span><span>5 Yrs</span><span>10 Yrs</span></div>
     </div>
 
     <div class="field">
       <label for="growth">Terminal Growth Rate (g) <output id="growth-val">2.5%</output></label>
       <input type="range" id="growth" name="growth" min="0.01" max="0.05" step="0.001" value="0.025"
-        oninput="document.getElementById('growth-val').textContent = (this.value * 100).toFixed(1) + '%'">
+        oninput="setOut('growth-val', (this.value * 100).toFixed(1) + '%')">
       <div class="scale"><span>1.0%</span><span>2.5% (GDP norm)</span><span>5.0%</span></div>
     </div>
 
     <details>
-      <summary>Model Overrides</summary>
+      <summary>Forecasting Strategies</summary>
+      <div class="strat-group">
+        <div class="strat-row">
+          <label for="rev-strat">1. Revenue Growth</label>
+          <select id="rev-strat" onchange="toggleStratInput('rev')">
+            <option value="historical" selected>Historical Average</option>
+            <option value="rolling">Rolling Average (3Y)</option>
+            <option value="linear">Linear Convergence (to g / target)</option>
+          </select>
+          <div id="rev-wrap" class="slide"><div><span>Target Rate:</span><input type="number" step="0.001" id="rev-target" placeholder="Default: Terminal Growth Rate (g)"></div></div>
+        </div>
+        <div class="strat-row">
+          <label for="ebit-strat">2. Operating (EBIT) Margin</label>
+          <select id="ebit-strat" onchange="toggleStratInput('ebit')">
+            <option value="historical" selected>Historical Average</option>
+            <option value="rolling">Rolling Average (3Y)</option>
+            <option value="linear">Linear Convergence (Target Margin)</option>
+          </select>
+          <div id="ebit-wrap" class="slide"><div><span>Target Margin:</span><input type="number" step="0.01" id="ebit-target" placeholder="e.g. 0.22 for 22%"></div></div>
+        </div>
+        <div class="strat-row">
+          <label for="capex-strat">3. CapEx Ratio</label>
+          <select id="capex-strat" onchange="toggleStratInput('capex')">
+            <option value="historical" selected>Historical Average</option>
+            <option value="rolling">Rolling Average (3Y)</option>
+            <option value="linear">Linear Convergence (Target Ratio)</option>
+          </select>
+          <div id="capex-wrap" class="slide"><div><span>Target Ratio:</span><input type="number" step="0.01" id="capex-target" placeholder="e.g. 0.05 for 5%"></div></div>
+        </div>
+        <div class="strat-row">
+          <label for="da-strat">4. D&amp;A Ratio</label>
+          <select id="da-strat" onchange="toggleStratInput('da')">
+            <option value="historical" selected>Historical Average</option>
+            <option value="rolling">Rolling Average (3Y)</option>
+            <option value="linear">Linear Convergence (Target Ratio)</option>
+          </select>
+          <div id="da-wrap" class="slide"><div><span>Target Ratio:</span><input type="number" step="0.01" id="da-target" placeholder="e.g. 0.04 for 4%"></div></div>
+        </div>
+        <div class="strat-row">
+          <label for="nwc-strat">5. NWC Ratio</label>
+          <select id="nwc-strat" onchange="toggleStratInput('nwc')">
+            <option value="historical" selected>Historical Average</option>
+            <option value="rolling">Rolling Average (3Y)</option>
+            <option value="linear">Linear Convergence (Target Ratio)</option>
+          </select>
+          <div id="nwc-wrap" class="slide"><div><span>Target Ratio:</span><input type="number" step="0.01" id="nwc-target" placeholder="e.g. 0.02 for 2%"></div></div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Valuation Overrides</summary>
       <div class="overrides">
         <div>
           <label for="exit_multiple">Exit Multiple (EV / EBITDA)</label>
@@ -590,6 +122,26 @@ td small {
       <span id="btn-spinner" class="spin" hidden></span>
     </button>
   </form>
+
+  <div class="aside-footer">
+    <span class="aside-footer-title">Developed by Gleb Sokhin</span>
+    <div class="aside-socials">
+      <a href="https://glebquant.netlify.app/" target="_blank" rel="noopener noreferrer" class="social-link">
+        <svg class="social-svg" style="width:15px;height:15px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+        <span>Website</span>
+      </a>
+      <a href="https://github.com/Student-of-Python" target="_blank" rel="noopener noreferrer" class="social-link">
+        <img src="/img/logos/githublogo.png" alt="GitHub" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+        <svg class="social-svg" style="display:none;width:15px;height:15px;vertical-align:middle;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <span>GitHub</span>
+      </a>
+      <a href="https://www.linkedin.com/in/gleb-sokhin/" target="_blank" rel="noopener noreferrer" class="social-link">
+        <img src="/img/logos/linkedinlogo.png" alt="LinkedIn" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+        <svg class="social-svg" style="display:none;width:15px;height:15px;vertical-align:middle;" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        <span>LinkedIn</span>
+      </a>
+    </div>
+  </div>
 </aside>
 
 <main>
@@ -599,23 +151,34 @@ td small {
   </div>
 
   <section id="empty-state">
+    <div class="empty-rule"></div>
     <h2>Intrinsic Valuation Model</h2>
     <p>Select a corporate ticker, configure the explicit forecast period and perpetual growth assumptions, and execute the model to calculate intrinsic enterprise and equity values.</p>
   </section>
 
   <section id="results-view" hidden>
-    <div class="headline-wrap">
-      <h1 class="headline" id="res-headline"></h1>
-    </div>
-    <p class="byline" id="res-byline"></p>
-
-    <div class="gauge">
-      <div class="gauge-header">
-        <span class="gauge-title">Market Quote vs. Implied Value per Share</span>
+    <div class="results-header-bar rv" style="--i:0">
+      <div class="results-title-group">
+        <h1 class="headline" id="res-headline"></h1>
+        <p class="byline" id="res-byline"></p>
       </div>
+      <button type="button" id="btn-export-excel" class="btn-export-excel" title="Download Excel valuation model, financial statements, and WACC framework">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="8" y1="13" x2="16" y2="13"></line>
+          <line x1="8" y1="17" x2="16" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span id="export-text">Export Model (.xlsx)</span>
+        <span id="export-spinner" class="spin" style="width:14px;height:14px;margin-left:4px" hidden></span>
+      </button>
+    </div>
 
+    <div class="gauge card rv" style="--i:2">
+      <span class="gauge-title">Market Quote vs. Implied Value per Share</span>
       <div class="track-container">
-        <div class="track" id="gauge-track">
+        <div class="track">
           <div class="span" id="gauge-span"></div>
           <div class="mark top" id="mark-price">
             <span class="v" id="res-current-price">$0.00</span>
@@ -627,7 +190,6 @@ td small {
           </div>
         </div>
       </div>
-
       <div class="gauge-meta">
         <span>Discount Rate (WACC): <b id="res-wacc">0.00%</b></span>
         <span>Spread: <b id="res-spread">0.00%</b></span>
@@ -635,49 +197,30 @@ td small {
       </div>
     </div>
 
-    <h3>Enterprise to Equity Value Bridge</h3>
-    <p class="note">Sum of discounted explicit cash flows and perpetual terminal value, less net corporate obligations.</p>
-
-    <div class="table-wrap">
-      <table>
-        <tr>
-          <td>PV of Explicit Forecast Cash Flows</td>
-          <td id="res-pv-fcff">$0.00</td>
-        </tr>
-        <tr>
-          <td>PV of Terminal Value</td>
-          <td id="res-pv-tv">$0.00</td>
-        </tr>
-        <tr class="sub">
-          <td>Enterprise Value (EV)</td>
-          <td id="res-ev">$0.00</td>
-        </tr>
-        <tr>
-          <td>Less: Net Debt <small>(Negative indicates Net Cash)</small></td>
-          <td id="res-netdebt">$0.00</td>
-        </tr>
-        <tr class="total">
-          <td>Implied Equity Value</td>
-          <td id="res-equity">$0.00</td>
-        </tr>
-      </table>
-
-      <div class="tvbar" aria-hidden="true">
-        <i class="a" id="bar-fcff"></i>
-        <i class="b" id="bar-tv"></i>
-      </div>
-      <div class="legend">
-        <span class="a">Explicit Forecast: <b id="lg-fcff"></b></span>
-        <span class="b">Terminal Perpetuity: <b id="lg-tv"></b></span>
+    <div class="rv" style="--i:4">
+      <h3>Enterprise to Equity Value Bridge</h3>
+      <p class="note">Sum of discounted explicit cash flows and perpetual terminal value, less net corporate obligations.</p>
+      <div class="table-wrap card">
+        <table><tbody>
+          <tr class="rv" style="--i:5"><td>PV of Explicit Forecast Cash Flows</td><td id="res-pv-fcff">$0.00</td></tr>
+          <tr class="rv" style="--i:6"><td>PV of Terminal Value</td><td id="res-pv-tv">$0.00</td></tr>
+          <tr class="sub rv" style="--i:7"><td>Enterprise Value (EV)</td><td id="res-ev">$0.00</td></tr>
+          <tr class="rv" style="--i:8"><td>Less: Net Debt <small>(Negative indicates Net Cash)</small></td><td id="res-netdebt">$0.00</td></tr>
+          <tr class="total rv" style="--i:9"><td>Implied Equity Value</td><td id="res-equity">$0.00</td></tr>
+        </tbody></table>
+        <div class="tvbar" aria-hidden="true"><i class="a" id="bar-fcff"></i><i class="b" id="bar-tv"></i></div>
+        <div class="legend">
+          <span class="a">Explicit Forecast: <b id="lg-fcff"></b></span>
+          <span class="b">Terminal Perpetuity: <b id="lg-tv"></b></span>
+        </div>
       </div>
     </div>
 
-    <h3>Projected Free Cash Flow Schedule</h3>
-    <p class="note">Unlevered Free Cash Flows to Firm (FCFF) across the projection horizon.</p>
-    
-    <div class="chart-box">
-      <div class="chart-wrap">
-        <canvas id="fcff-chart" role="img" aria-label="Bar chart of projected free cash flow by year"></canvas>
+    <div class="rv" style="--i:10">
+      <h3>Projected Free Cash Flow Schedule</h3>
+      <p class="note">Unlevered Free Cash Flows to Firm (FCFF) across the projection horizon.</p>
+      <div class="chart-box card">
+        <div class="chart-wrap"><canvas id="fcff-chart" role="img" aria-label="Bar chart of projected free cash flow by year"></canvas></div>
       </div>
     </div>
   </section>
@@ -685,9 +228,19 @@ td small {
 
 <script>
 let cashFlowChartInstance = null;
+const $ = id => document.getElementById(id);
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function setTicker(symbol) {
-  document.getElementById('ticker').value = symbol;
+function setTicker(s) { $('ticker').value = s; }
+
+function setOut(id, text) {
+  const o = $(id);
+  o.textContent = text;
+  o.classList.remove('bump'); void o.offsetWidth; o.classList.add('bump');
+}
+
+function toggleStratInput(driver) {
+  $(driver + '-wrap').classList.toggle('open', $(driver + '-strat').value === 'linear');
 }
 
 function formatMoney(amount) {
@@ -700,30 +253,64 @@ function formatMoney(amount) {
   return `${sign}$${abs.toFixed(2)}`;
 }
 
-const $ = id => document.getElementById(id);
+// Count a number up from zero with easing; cancels any earlier run on the same element
+function countTo(el, to, fmt, dur = 1200, delay = 0) {
+  if (reduced) { el.textContent = fmt(to); return; }
+  const start = performance.now() + delay;
+  el._t = start;
+  el.textContent = fmt(0);
+  (function tick(now) {
+    if (el._t !== start) return;
+    const p = Math.min(1, Math.max(0, (now - start) / dur));
+    el.textContent = fmt(to * (1 - Math.pow(1 - p, 4)));
+    if (p < 1) requestAnimationFrame(tick);
+  })(performance.now());
+}
 
-document.getElementById('dcf-form').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const tickerVal = $('ticker').value.trim().toUpperCase();
-  const num = id => {
-    const v = $(id).value;
-    return v ? parseFloat(v) : null;
+function getDriverPayload(driver, defaultTarget = null) {
+  const strat = $(driver + '-strat').value;
+  if (strat === 'historical') return null; // backend defaults to historical
+  const raw = $(driver + '-target').value.trim();
+  const targetVal = raw !== "" ? parseFloat(raw) : defaultTarget;
+  return {
+    strategy: strat,
+    window: strat === 'rolling' ? 3 : null,
+    target_rate: strat === 'linear' ? targetVal : null
   };
+}
 
-  const payload = {
+function buildFormPayload() {
+  const tickerVal = $('ticker').value.trim().toUpperCase();
+  const num = id => { const v = $(id).value; return v ? parseFloat(v) : null; };
+  const horizonVal = parseInt($('horizon').value, 10);
+  const growthVal = parseFloat($('growth').value);
+
+  return {
     ticker: tickerVal,
-    horizon: parseInt($('horizon').value, 10),
-    growth: parseFloat($('growth').value),
+    horizon: horizonVal,
+    growth: growthVal,
     exit_multiple: num('exit_multiple'),
     risk_free: num('risk_free'),
-    erp: num('erp')
+    erp: num('erp'),
+    revenue_strat: getDriverPayload('rev', growthVal),
+    ebit_strat: getDriverPayload('ebit'),
+    capex_strat: getDriverPayload('capex'),
+    da_strat: getDriverPayload('da'),
+    nwc_strat: getDriverPayload('nwc')
   };
+}
+
+$('dcf-form').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const payload = buildFormPayload();
+  const tickerVal = payload.ticker;
 
   $('error-card').hidden = true;
   $('btn-text').textContent = `Valuing ${tickerVal}…`;
   $('btn-spinner').hidden = false;
   $('submit-btn').disabled = true;
+  document.body.classList.add('loading');
 
   try {
     const response = await fetch('/api/v1/valuation', {
@@ -738,83 +325,130 @@ document.getElementById('dcf-form').addEventListener('submit', async function (e
       throw new Error(typeof d === 'string' ? d : (d ? JSON.stringify(d) : `Server returned status ${response.status}`));
     }
 
-    renderResults(tickerVal, payload, data);
     $('empty-state').hidden = true;
     $('results-view').hidden = false;
+    renderResults(tickerVal, payload, data);
     renderChart(data.projected_fcff);
-
+    if (window.innerWidth <= 960) $('results-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (err) {
     $('error-msg').textContent = err.message || "An unexpected error occurred.";
     $('error-card').hidden = false;
+    $('error-card').style.animation = 'none'; void $('error-card').offsetWidth; $('error-card').style.animation = '';
   } finally {
+    document.body.classList.remove('loading');
     $('btn-text').textContent = "Execute Valuation";
     $('btn-spinner').hidden = true;
     $('submit-btn').disabled = false;
   }
 });
 
+$('btn-export-excel').addEventListener('click', async function () {
+  const btn = $('btn-export-excel');
+  const txt = $('export-text');
+  const spin = $('export-spinner');
+
+  const payload = buildFormPayload();
+  if (!payload.ticker) {
+    alert("Please enter a valid ticker first.");
+    return;
+  }
+
+  btn.disabled = true;
+  txt.textContent = "Generating Model…";
+  spin.hidden = false;
+
+  try {
+    const response = await fetch('/api/v1/export/excel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({ detail: 'Failed to generate Excel report' }));
+      throw new Error(errData.detail || 'Download failed');
+    }
+
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = `${payload.ticker}_DCF_Valuation_Model.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (err) {
+    alert('Excel Export Error: ' + (err.message || err));
+  } finally {
+    btn.disabled = false;
+    txt.textContent = "Export Model (.xlsx)";
+    spin.hidden = true;
+  }
+});
+
 function renderResults(ticker, payload, data) {
+  const view = $('results-view');
   const up = data.upside_downside_pct >= 0;
-  const pct = Math.abs(data.upside_downside_pct * 100).toFixed(1);
+  const pctVal = Math.abs(data.upside_downside_pct * 100);
   const cls = up ? 'up' : 'down';
 
+  // Park the gauge and bar at their start positions, then replay the entrance
+  const span = $('gauge-span'), mp = $('mark-price'), mv = $('mark-value');
+  [mp, mv].forEach(m => m.style.left = '8%');
+  span.className = 'span ' + cls;
+  span.style.left = '8%'; span.style.width = '0%';
+  $('bar-fcff').style.width = '0%'; $('bar-tv').style.width = '0%';
+  view.classList.remove('enter'); void view.offsetWidth; view.classList.add('enter');
+
   $('res-headline').innerHTML =
-    `${ticker}’s DCF value is <span class="pct ${cls}">${pct}% ${up ? 'above' : 'below'}</span> market price`;
+    `${ticker}’s DCF value is <span class="pct ${cls}"><span id="hl-n">0.0</span>% ${up ? 'above' : 'below'}</span> market price`;
   $('res-byline').textContent =
     `Based on a ${payload.horizon}-year forecast and ${(payload.growth * 100).toFixed(1)}% terminal growth rate.`;
 
-  $('res-current-price').textContent = `$${data.current_price.toFixed(2)}`;
-  $('res-implied-price').textContent = `$${data.implied_share_price.toFixed(2)}`;
-  
-  $('res-spread').textContent = `${up ? '+' : '−'}${pct}%`;
-  
+  const money2 = v => `$${v.toFixed(2)}`;
+  countTo($('hl-n'), pctVal, v => v.toFixed(1), 1300, 200);
+  countTo($('res-current-price'), data.current_price, money2, 1200, 300);
+  countTo($('res-implied-price'), data.implied_share_price, money2, 1200, 400);
+  countTo($('res-spread'), pctVal, v => `${up ? '+' : '−'}${v.toFixed(1)}%`, 1200, 500);
+  countTo($('res-wacc'), data.wacc * 100, v => `${v.toFixed(2)}%`, 1200, 500);
+
   const badge = $('res-badge');
-  badge.textContent = up ? 'UNDERVALUED' : 'OVERVALUED';
+  badge.textContent = up ? 'Undervalued' : 'Overvalued';
   badge.className = `verdict-badge ${cls}`;
 
-  $('res-wacc').textContent = `${(data.wacc * 100).toFixed(2)}%`;
-
-  // Scale calculations for the gauge
-  const p = data.current_price;
-  const v = data.implied_share_price;
-  const lo = Math.min(p, v);
-  const hi = Math.max(p, v);
-
-  // Add breathing room on sides so marks don't push outside the track
+  // Gauge layout
+  const p = data.current_price, v = data.implied_share_price;
+  const lo = Math.min(p, v), hi = Math.max(p, v);
   const diff = Math.max(hi - lo, 1.0);
   const pad = Math.max(diff * 0.45, hi * 0.12);
-  const min = Math.max(0, lo - pad);
-  const max = hi + pad;
-
-  // Clamped pos between 8% and 92% prevents edge text overlap
+  const min = Math.max(0, lo - pad), max = hi + pad;
   const pos = val => Math.min(92, Math.max(8, ((val - min) / (max - min)) * 100));
+  const pPos = pos(p), vPos = pos(v);
 
-  const pPos = pos(p);
-  const vPos = pos(v);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    mp.style.left = pPos + '%';
+    mv.style.left = vPos + '%';
+    span.style.left = Math.min(pPos, vPos) + '%';
+    span.style.width = Math.abs(vPos - pPos) + '%';
+  }));
 
-  $('mark-price').style.left = pPos + '%';
-  $('mark-value').style.left = vPos + '%';
-
-  const span = $('gauge-span');
-  span.className = 'span ' + cls;
-  span.style.left = Math.min(pPos, vPos) + '%';
-  span.style.width = Math.abs(vPos - pPos) + '%';
-
-  // Enterprise to Equity Bridge Table
+  // Bridge table
   const netDebt = data.enterprise_value - data.equity_value;
-  $('res-pv-fcff').textContent = formatMoney(data.pv_fcff);
-  $('res-pv-tv').textContent = formatMoney(data.pv_terminal_value);
-  $('res-ev').textContent = formatMoney(data.enterprise_value);
-  $('res-netdebt').textContent = formatMoney(netDebt);
-  $('res-equity').textContent = formatMoney(data.equity_value);
+  const rows = [
+    ['res-pv-fcff', data.pv_fcff], ['res-pv-tv', data.pv_terminal_value],
+    ['res-ev', data.enterprise_value], ['res-netdebt', netDebt], ['res-equity', data.equity_value]
+  ];
+  rows.forEach(([id, val], i) => countTo($(id), val, formatMoney, 1100, 600 + i * 100));
 
-  // Terminal Value Ratio Bar
   const total = data.pv_fcff + data.pv_terminal_value;
   const tvShare = total > 0 ? (data.pv_terminal_value / total) * 100 : 0;
-  $('bar-tv').style.width = tvShare + '%';
-  $('bar-fcff').style.width = (100 - tvShare) + '%';
-  $('lg-fcff').textContent = `${(100 - tvShare).toFixed(1)}%`;
-  $('lg-tv').textContent = `${tvShare.toFixed(1)}%`;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    $('bar-tv').style.width = tvShare + '%';
+    $('bar-fcff').style.width = (100 - tvShare) + '%';
+  }));
+  countTo($('lg-fcff'), 100 - tvShare, x => `${x.toFixed(1)}%`, 1200, 800);
+  countTo($('lg-tv'), tvShare, x => `${x.toFixed(1)}%`, 1200, 800);
 }
 
 function renderChart(fcffList) {
@@ -844,6 +478,12 @@ function renderChart(fcffList) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: reduced ? false : {
+        duration: 900,
+        easing: 'easeOutQuart',
+        delay: c => c.type === 'data' ? 1000 + c.dataIndex * 90 : 0
+      },
+      transitions: { active: { animation: { duration: 200 } } },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -852,25 +492,12 @@ function renderChart(fcffList) {
           bodyFont: { family: '"IBM Plex Sans", sans-serif', size: 12 },
           padding: 10,
           cornerRadius: 4,
-          callbacks: {
-            label: c => ` Projected FCFF: $${c.raw.toFixed(2)} Billion`
-          }
+          callbacks: { label: c => ` Projected FCFF: $${c.raw.toFixed(2)} Billion` }
         }
       },
       scales: {
-        x: {
-          grid: { display: false },
-          ticks: { color: ink, font }
-        },
-        y: {
-          grid: { color: rule },
-          border: { display: false },
-          ticks: {
-            color: ink,
-            font,
-            callback: v => `$${v}B`
-          }
-        }
+        x: { grid: { display: false }, ticks: { color: ink, font } },
+        y: { grid: { color: rule }, border: { display: false }, ticks: { color: ink, font, callback: v => `$${v}B` } }
       }
     }
   });
